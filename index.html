@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LearnHub | Online Education</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="nav">
+  <a class="logo" href="#">Learn<span>Hub</span></a>
+  <nav>
+    <a href="#courses">Courses</a><a href="#tutors">Tutors</a><a href="#pricing">Pricing</a>
+    <button class="btn outline" onclick="openModal('login')">Login</button>
+    <button class="btn" onclick="openModal('signup')">Get Started</button>
+  </nav>
+</header>
+
+<main>
+<section class="hero">
+  <div>
+    <p class="eyebrow">LEARN • PRACTICE • GROW</p>
+    <h1>Learning made <span>simple.</span></h1>
+    <p class="lead">Courses, tutors, practice tests and progress tracking in one professional learning platform.</p>
+    <div class="actions"><button class="btn" onclick="openModal('signup')">Start Learning</button><a class="btn outline" href="#courses">Explore Courses</a></div>
+  </div>
+  <div class="hero-card"><div class="play">▶</div><h3>Continue your learning</h3><p>Mathematics Fundamentals</p><div class="progress"><i></i></div><small>65% complete</small></div>
+</section>
+
+<section class="section" id="courses">
+  <div class="section-head"><div><p class="eyebrow">EXPLORE</p><h2>Popular courses</h2></div><a href="#">View all →</a></div>
+  <div class="grid" id="courseGrid"></div>
+</section>
+
+<section class="section soft" id="tutors">
+  <p class="eyebrow">EXPERT SUPPORT</p><h2>Learn with experienced tutors</h2>
+  <div class="grid tutors">
+    <article class="card"><div class="avatar">AM</div><h3>Alex Morgan</h3><p>Mathematics • 8 years experience</p><strong>★ 4.9</strong></article>
+    <article class="card"><div class="avatar">LN</div><h3>Linda Ncube</h3><p>English • 6 years experience</p><strong>★ 4.8</strong></article>
+    <article class="card"><div class="avatar">DK</div><h3>Daniel Khan</h3><p>Science • 10 years experience</p><strong>★ 5.0</strong></article>
+  </div>
+</section>
+
+<section class="section" id="pricing">
+  <p class="eyebrow">SIMPLE PLANS</p><h2>Choose how you learn</h2>
+  <div class="pricing">
+    <article class="price card"><h3>Free</h3><div class="amount">$0</div><p>Selected lessons and basic practice.</p><button class="btn outline" onclick="openModal('signup')">Get Started</button></article>
+    <article class="price card featured"><span class="tag">POPULAR</span><h3>Standard</h3><div class="amount">$12<span>/mo</span></div><p>Full courses, assessments and progress tracking.</p><button class="btn" onclick="openModal('signup')">Choose Standard</button></article>
+    <article class="price card"><h3>Premium</h3><div class="amount">$25<span>/mo</span></div><p>Everything in Standard plus premium tutoring benefits.</p><button class="btn outline" onclick="openModal('signup')">Choose Premium</button></article>
+  </div>
+</section>
+</main>
+
+<footer><div class="logo">Learn<span>Hub</span></div><p>Professional online learning for every learner.</p><small>© 2026 LearnHub. Prototype.</small></footer>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <button class="close" onclick="closeModal()">×</button>
+    <h2 id="modalTitle">Create your account</h2>
+    <form id="authForm">
+      <input id="nameField" placeholder="Full name" required>
+      <input type="email" placeholder="Email address" required>
+      <input type="password" placeholder="Password" minlength="6" required>
+      <select><option>Student</option><option>Parent</option><option>Tutor</option></select>
+      <button class="btn" type="submit">Continue</button>
+    </form>
+    <p class="demo">Demo only: accounts are stored locally in this prototype.</p>
+  </div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
