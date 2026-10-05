@@ -3,70 +3,481 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LearnHub | Online Education</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Golden Generation Online Academy</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f8ff;
+      color: #151936;
+      line-height: 1.6;
+    }
+
+    header {
+      background: white;
+      border-bottom: 1px solid #e5e7f2;
+      padding: 18px 6%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      text-decoration: none;
+      font-size: 22px;
+      font-weight: 800;
+      color: #151936;
+    }
+
+    .logo span {
+      color: #5546e8;
+    }
+
+    nav {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #4b506b;
+      font-weight: 600;
+      padding: 10px 14px;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .btn {
+      background: #5546e8;
+      color: white;
+      padding: 13px 22px;
+      border-radius: 10px;
+      font-weight: 700;
+    }
+
+    .btn:hover {
+      opacity: .9;
+    }
+
+    .outline {
+      background: white;
+      color: #5546e8;
+      border: 1px solid #d8daf0;
+    }
+
+    .hero {
+      padding: 90px 7%;
+      min-height: 600px;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-content {
+      max-width: 720px;
+    }
+
+    .eyebrow {
+      color: #5546e8;
+      font-weight: 800;
+      letter-spacing: 2px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: clamp(48px, 8vw, 78px);
+      line-height: 1.05;
+      margin-bottom: 25px;
+    }
+
+    h1 span {
+      color: #5546e8;
+    }
+
+    .hero p {
+      color: #68708b;
+      font-size: 20px;
+      max-width: 650px;
+      margin-bottom: 30px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .section {
+      padding: 70px 7%;
+      background: white;
+    }
+
+    .section h2 {
+      font-size: 38px;
+      margin-bottom: 15px;
+    }
+
+    .section-intro {
+      color: #68708b;
+      margin-bottom: 35px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: #f7f8ff;
+      padding: 28px;
+      border-radius: 18px;
+      border: 1px solid #e5e7f2;
+    }
+
+    .card h3 {
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      color: #68708b;
+    }
+
+    footer {
+      padding: 35px 7%;
+      background: #151936;
+      color: white;
+      text-align: center;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 12, 30, .65);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-box {
+      background: white;
+      width: 100%;
+      max-width: 430px;
+      border-radius: 20px;
+      padding: 30px;
+      position: relative;
+    }
+
+    .close {
+      position: absolute;
+      right: 18px;
+      top: 12px;
+      background: transparent;
+      font-size: 28px;
+      color: #777;
+    }
+
+    .modal-box h2 {
+      margin-bottom: 8px;
+    }
+
+    .modal-box p {
+      color: #68708b;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #d8daf0;
+      border-radius: 9px;
+      font-size: 16px;
+    }
+
+    .form-submit {
+      width: 100%;
+      margin-top: 5px;
+    }
+
+    .switch {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 14px;
+    }
+
+    .switch button {
+      background: transparent;
+      color: #5546e8;
+      font-weight: 700;
+    }
+
+    @media (max-width: 700px) {
+      header {
+        padding: 15px 4%;
+      }
+
+      nav a {
+        display: none;
+      }
+
+      .hero {
+        padding: 65px 5%;
+      }
+
+      .hero p {
+        font-size: 18px;
+      }
+
+      .section {
+        padding: 55px 5%;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<header class="nav">
-  <a class="logo" href="#">Learn<span>Hub</span></a>
+
+<header>
+  <a href="#" class="logo">Golden Generation <span>Academy</span></a>
+
   <nav>
-    <a href="#courses">Courses</a><a href="#tutors">Tutors</a><a href="#pricing">Pricing</a>
+    <a href="#courses">Courses</a>
+    <a href="#tutors">Tutors</a>
+    <a href="#about">About</a>
     <button class="btn outline" onclick="openModal('login')">Login</button>
-    <button class="btn" onclick="openModal('signup')">Get Started</button>
+    <button class="btn" onclick="openModal('register')">Get Started</button>
   </nav>
 </header>
 
 <main>
-<section class="hero">
-  <div>
-    <p class="eyebrow">LEARN • PRACTICE • GROW</p>
-    <h1>Learning made <span>simple.</span></h1>
-    <p class="lead">Courses, tutors, practice tests and progress tracking in one professional learning platform.</p>
-    <div class="actions"><button class="btn" onclick="openModal('signup')">Start Learning</button><a class="btn outline" href="#courses">Explore Courses</a></div>
-  </div>
-  <div class="hero-card"><div class="play">▶</div><h3>Continue your learning</h3><p>Mathematics Fundamentals</p><div class="progress"><i></i></div><small>65% complete</small></div>
-</section>
 
-<section class="section" id="courses">
-  <div class="section-head"><div><p class="eyebrow">EXPLORE</p><h2>Popular courses</h2></div><a href="#">View all →</a></div>
-  <div class="grid" id="courseGrid"></div>
-</section>
+  <section class="hero">
+    <div class="hero-content">
+      <div class="eyebrow">LEARN • PRACTICE • GROW</div>
 
-<section class="section soft" id="tutors">
-  <p class="eyebrow">EXPERT SUPPORT</p><h2>Learn with experienced tutors</h2>
-  <div class="grid tutors">
-    <article class="card"><div class="avatar">AM</div><h3>Alex Morgan</h3><p>Mathematics • 8 years experience</p><strong>★ 4.9</strong></article>
-    <article class="card"><div class="avatar">LN</div><h3>Linda Ncube</h3><p>English • 6 years experience</p><strong>★ 4.8</strong></article>
-    <article class="card"><div class="avatar">DK</div><h3>Daniel Khan</h3><p>Science • 10 years experience</p><strong>★ 5.0</strong></article>
-  </div>
-</section>
+      <h1>
+        Learning made
+        <span>powerful.</span>
+      </h1>
 
-<section class="section" id="pricing">
-  <p class="eyebrow">SIMPLE PLANS</p><h2>Choose how you learn</h2>
-  <div class="pricing">
-    <article class="price card"><h3>Free</h3><div class="amount">$0</div><p>Selected lessons and basic practice.</p><button class="btn outline" onclick="openModal('signup')">Get Started</button></article>
-    <article class="price card featured"><span class="tag">POPULAR</span><h3>Standard</h3><div class="amount">$12<span>/mo</span></div><p>Full courses, assessments and progress tracking.</p><button class="btn" onclick="openModal('signup')">Choose Standard</button></article>
-    <article class="price card"><h3>Premium</h3><div class="amount">$25<span>/mo</span></div><p>Everything in Standard plus premium tutoring benefits.</p><button class="btn outline" onclick="openModal('signup')">Choose Premium</button></article>
-  </div>
-</section>
+      <p>
+        Welcome to Golden Generation Online Academy — a professional
+        learning platform connecting students, tutors and quality
+        educational resources in one place.
+      </p>
+
+      <div class="actions">
+        <button class="btn" onclick="openModal('register')">
+          Start Learning
+        </button>
+
+        <a href="#courses">
+          <button class="btn outline">
+            Explore Courses
+          </button>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="courses">
+    <h2>Explore Our Learning Platform</h2>
+
+    <p class="section-intro">
+      Everything students need to learn, practise and track their progress.
+    </p>
+
+    <div class="cards">
+      <div class="card">
+        <h3>📚 Online Courses</h3>
+        <p>Access structured courses and learning materials.</p>
+      </div>
+
+      <div class="card">
+        <h3>👨‍🏫 Expert Tutors</h3>
+        <p>Learn from tutors and receive guidance throughout your studies.</p>
+      </div>
+
+      <div class="card">
+        <h3>📝 Practice & Tests</h3>
+        <p>Complete assignments, quizzes and practice assessments.</p>
+      </div>
+
+      <div class="card">
+        <h3>📊 Track Progress</h3>
+        <p>Monitor your learning progress from your student dashboard.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="tutors">
+    <h2>For Tutors</h2>
+
+    <p class="section-intro">
+      A future tutor dashboard will allow educators to create courses,
+      manage students, upload lessons and track performance.
+    </p>
+  </section>
+
+  <section class="section" id="about">
+    <h2>Golden Generation Online Academy</h2>
+
+    <p class="section-intro">
+      Our goal is to build a modern online education platform where
+      students and educators can connect, learn and grow.
+    </p>
+  </section>
+
 </main>
 
-<footer><div class="logo">Learn<span>Hub</span></div><p>Professional online learning for every learner.</p><small>© 2026 LearnHub. Prototype.</small></footer>
+<footer>
+  <p>© 2026 Golden Generation Online Academy. All rights reserved.</p>
+</footer>
 
-<div class="modal" id="modal">
+<!-- Registration / Login Modal -->
+
+<div class="modal" id="authModal">
   <div class="modal-box">
+
     <button class="close" onclick="closeModal()">×</button>
-    <h2 id="modalTitle">Create your account</h2>
-    <form id="authForm">
-      <input id="nameField" placeholder="Full name" required>
-      <input type="email" placeholder="Email address" required>
-      <input type="password" placeholder="Password" minlength="6" required>
-      <select><option>Student</option><option>Parent</option><option>Tutor</option></select>
-      <button class="btn" type="submit">Continue</button>
-    </form>
-    <p class="demo">Demo only: accounts are stored locally in this prototype.</p>
+
+    <div id="registerForm">
+      <h2>Create Your Student Account</h2>
+
+      <p>Join Golden Generation Online Academy and start learning.</p>
+
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="fullName" placeholder="Enter your full name">
+      </div>
+
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="registerEmail" placeholder="Enter your email">
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="registerPassword" placeholder="Create a password">
+      </div>
+
+      <button class="btn form-submit" onclick="registerStudent()">
+        Create Student Account
+      </button>
+
+      <div class="switch">
+        Already have an account?
+        <button onclick="showLogin()">Login</button>
+      </div>
+    </div>
+
+    <div id="loginForm" style="display:none;">
+      <h2>Welcome Back</h2>
+
+      <p>Login to your student account.</p>
+
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="loginEmail" placeholder="Enter your email">
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="Enter your password">
+      </div>
+
+      <button class="btn form-submit" onclick="loginStudent()">
+        Login
+      </button>
+
+      <div class="switch">
+        Don't have an account?
+        <button onclick="showRegister()">Create one</button>
+      </div>
+    </div>
+
   </div>
 </div>
-<script src="app.js"></script>
+
+<script>
+  function openModal(type) {
+    document.getElementById("authModal").style.display = "flex";
+
+    if (type === "login") {
+      showLogin();
+    } else {
+      showRegister();
+    }
+  }
+
+  function closeModal() {
+    document.getElementById("authModal").style.display = "none";
+  }
+
+  function showLogin() {
+    document.getElementById("registerForm").style.display = "none";
+    document.getElementById("loginForm").style.display = "block";
+  }
+
+  function showRegister() {
+    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("registerForm").style.display = "block";
+  }
+
+  function registerStudent() {
+    const name = document.getElementById("fullName").value;
+    const email = document.getElementById("registerEmail").value;
+    const password = document.getElementById("registerPassword").value;
+
+    if (!name || !email || !password) {
+      alert("Please complete all fields.");
+      return;
+    }
+
+    alert(
+      "Registration interface is ready. Next we will connect this form to Supabase."
+    );
+  }
+
+  function loginStudent() {
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
+
+    if (!email || !password) {
+      alert("Please enter your email and password.");
+      return;
+    }
+
+    alert(
+      "Login interface is ready. Next we will connect login to Supabase."
+    );
+  }
+</script>
+
 </body>
 </html>
