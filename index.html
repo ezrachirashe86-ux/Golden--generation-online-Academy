@@ -1,482 +1,431 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Golden Generation Online Academy</title>
-
+  <meta name="description" content="Quality online education connecting students with qualified tutors worldwide.">
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    :root {
+      --navy: #102746;
+      --blue: #1769aa;
+      --gold: #f2b632;
+      --light: #f4f7fb;
+      --text: #243247;
     }
 
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
+      margin: 0;
       font-family: Arial, sans-serif;
-      background: #f7f8ff;
-      color: #151936;
+      color: var(--text);
       line-height: 1.6;
     }
-
     header {
       background: white;
-      border-bottom: 1px solid #e5e7f2;
-      padding: 18px 6%;
+      padding: 14px 6%;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .logo {
-      text-decoration: none;
-      font-size: 22px;
-      font-weight: 800;
-      color: #151936;
-    }
-
-    .logo span {
-      color: #5546e8;
-    }
-
-    nav {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    nav a {
-      text-decoration: none;
-      color: #4b506b;
-      font-weight: 600;
-      padding: 10px 14px;
-    }
-
-    button {
-      border: none;
-      cursor: pointer;
-      font: inherit;
-    }
-
-    .btn {
-      background: #5546e8;
-      color: white;
-      padding: 13px 22px;
-      border-radius: 10px;
-      font-weight: 700;
-    }
-
-    .btn:hover {
-      opacity: .9;
-    }
-
-    .outline {
-      background: white;
-      color: #5546e8;
-      border: 1px solid #d8daf0;
-    }
-
-    .hero {
-      padding: 90px 7%;
-      min-height: 600px;
-      display: flex;
-      align-items: center;
-    }
-
-    .hero-content {
-      max-width: 720px;
-    }
-
-    .eyebrow {
-      color: #5546e8;
-      font-weight: 800;
-      letter-spacing: 2px;
-      margin-bottom: 18px;
-    }
-
-    h1 {
-      font-size: clamp(48px, 8vw, 78px);
-      line-height: 1.05;
-      margin-bottom: 25px;
-    }
-
-    h1 span {
-      color: #5546e8;
-    }
-
-    .hero p {
-      color: #68708b;
-      font-size: 20px;
-      max-width: 650px;
-      margin-bottom: 30px;
-    }
-
-    .actions {
-      display: flex;
-      gap: 15px;
+      gap: 16px;
       flex-wrap: wrap;
+      box-shadow: 0 2px 10px #00000010;
     }
-
-    .section {
-      padding: 70px 7%;
-      background: white;
+    .brand { color: var(--navy); font-weight: bold; font-size: 19px; }
+    .brand span { color: #c58b08; }
+    nav { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+    nav a { color: var(--navy); text-decoration: none; font-weight: 600; }
+    a:hover { color: var(--blue); }
+    button {
+      border: 0;
+      border-radius: 7px;
+      padding: 12px 18px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 15px;
     }
-
-    .section h2 {
-      font-size: 38px;
-      margin-bottom: 15px;
-    }
-
-    .section-intro {
-      color: #68708b;
-      margin-bottom: 35px;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-    }
-
-    .card {
-      background: #f7f8ff;
-      padding: 28px;
-      border-radius: 18px;
-      border: 1px solid #e5e7f2;
-    }
-
-    .card h3 {
-      margin-bottom: 8px;
-    }
-
-    .card p {
-      color: #68708b;
-    }
-
-    footer {
-      padding: 35px 7%;
-      background: #151936;
+    .primary { background: var(--gold); color: var(--navy); }
+    .secondary { background: var(--blue); color: white; }
+    .hero {
+      background: linear-gradient(120deg, #102746, #1769aa);
       color: white;
-      text-align: center;
+      padding: 78px 7%;
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 30px;
+      align-items: center;
     }
-
+    .hero h1 { font-size: clamp(32px, 5vw, 52px); line-height: 1.15; margin: 0 0 20px; }
+    .hero p { font-size: 18px; max-width: 650px; }
+    .hero-panel {
+      background: #ffffff12;
+      border: 1px solid #ffffff40;
+      border-radius: 16px;
+      padding: 26px;
+    }
+    section { padding: 58px 7%; }
+    .section-heading { text-align: center; margin: 0 auto 32px; max-width: 700px; }
+    .section-heading h2 { color: var(--navy); font-size: 30px; margin-bottom: 8px; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 23px;
+      box-shadow: 0 4px 20px #10274612;
+      border: 1px solid #e6ebf2;
+    }
+    .card h3 { color: var(--navy); }
+    .symbol { font-size: 34px; }
+    .soft { background: var(--light); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: center; }
+    .about-panel { background: white; border-radius: 14px; padding: 25px; }
+    .cta { background: var(--navy); color: white; text-align: center; }
+    .cta h2 { font-size: 30px; }
+    footer { background: #091a30; color: white; padding: 28px 7%; text-align: center; }
+    footer a { color: #f8cf69; }
     .modal {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(10, 12, 30, .65);
-      z-index: 100;
+      background: #07172dcc;
+      z-index: 10;
+      padding: 18px;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      overflow-y: auto;
     }
-
     .modal-box {
       background: white;
       width: 100%;
-      max-width: 430px;
-      border-radius: 20px;
-      padding: 30px;
+      max-width: 440px;
+      border-radius: 14px;
+      padding: 25px;
       position: relative;
+      margin: auto;
     }
-
+    .modal-box h2 { color: var(--navy); margin-top: 0; }
     .close {
       position: absolute;
-      right: 18px;
-      top: 12px;
+      top: 8px;
+      right: 10px;
       background: transparent;
-      font-size: 28px;
-      color: #777;
+      font-size: 26px;
+      padding: 4px 10px;
     }
-
-    .modal-box h2 {
-      margin-bottom: 8px;
-    }
-
-    .modal-box p {
-      color: #68708b;
-      margin-bottom: 20px;
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    .form-group label {
-      display: block;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .form-group input {
+    .field { margin: 14px 0; }
+    .field label { display: block; font-weight: bold; margin-bottom: 5px; }
+    .field input {
       width: 100%;
-      padding: 13px;
-      border: 1px solid #d8daf0;
-      border-radius: 9px;
+      padding: 12px;
+      border: 1px solid #cbd4e0;
+      border-radius: 7px;
       font-size: 16px;
     }
-
-    .form-submit {
-      width: 100%;
-      margin-top: 5px;
-    }
-
-    .switch {
-      text-align: center;
-      margin-top: 18px;
-      font-size: 14px;
-    }
-
-    .switch button {
-      background: transparent;
-      color: #5546e8;
-      font-weight: 700;
-    }
-
-    @media (max-width: 700px) {
-      header {
-        padding: 15px 4%;
-      }
-
-      nav a {
-        display: none;
-      }
-
-      .hero {
-        padding: 65px 5%;
-      }
-
-      .hero p {
-        font-size: 18px;
-      }
-
-      .section {
-        padding: 55px 5%;
-      }
+    .full { width: 100%; }
+    .switch { text-align: center; font-size: 14px; }
+    .switch a { color: var(--blue); cursor: pointer; font-weight: bold; }
+    #authMessage { font-size: 14px; overflow-wrap: anywhere; }
+    @media (max-width: 760px) {
+      header { justify-content: center; }
+      nav { justify-content: center; }
+      .hero { grid-template-columns: 1fr; padding: 52px 6%; }
+      .cards { grid-template-columns: 1fr; }
+      .about-grid { grid-template-columns: 1fr; }
+      section { padding: 42px 6%; }
     }
   </style>
 </head>
-
 <body>
 
 <header>
-  <a href="#" class="logo">Golden Generation <span>Academy</span></a>
-
+  <div class="brand">GOLDEN GENERATION <span>ACADEMY</span></div>
   <nav>
+    <a href="#home">Home</a>
     <a href="#courses">Courses</a>
     <a href="#tutors">Tutors</a>
     <a href="#about">About</a>
-    <button class="btn outline" onclick="openModal('login')">Login</button>
-    <button class="btn" onclick="openModal('register')">Get Started</button>
+    <button class="secondary" onclick="openModal('login')">Student Login</button>
+    <button class="primary" onclick="openModal('register')">Register</button>
   </nav>
 </header>
 
 <main>
-
-  <section class="hero">
-    <div class="hero-content">
-      <div class="eyebrow">LEARN • PRACTICE • GROW</div>
-
-      <h1>
-        Learning made
-        <span>powerful.</span>
-      </h1>
-
+  <section class="hero" id="home">
+    <div>
+      <p><strong>LEARN WITHOUT LIMITS</strong></p>
+      <h1>Quality Education for a Golden Future</h1>
       <p>
-        Welcome to Golden Generation Online Academy — a professional
-        learning platform connecting students, tutors and quality
-        educational resources in one place.
+        Learn from qualified, experienced tutors through an international
+        online school designed to make quality education accessible.
       </p>
-
-      <div class="actions">
-        <button class="btn" onclick="openModal('register')">
-          Start Learning
-        </button>
-
-        <a href="#courses">
-          <button class="btn outline">
-            Explore Courses
-          </button>
-        </a>
-      </div>
+      <button class="primary" onclick="openModal('register')">Join Our Academy</button>
+      <button class="secondary" onclick="document.getElementById('courses').scrollIntoView()">Explore Courses</button>
+    </div>
+    <div class="hero-panel">
+      <h2>Your Future Starts Here</h2>
+      <p>🌍 Learn from anywhere</p>
+      <p>👩‍🏫 Connect with qualified tutors</p>
+      <p>📚 Access learning resources</p>
+      <p>🎯 Build skills and confidence</p>
     </div>
   </section>
 
-  <section class="section" id="courses">
-    <h2>Explore Our Learning Platform</h2>
-
-    <p class="section-intro">
-      Everything students need to learn, practise and track their progress.
-    </p>
-
+  <section id="courses">
+    <div class="section-heading">
+      <h2>Explore Our Learning Areas</h2>
+      <p>Build knowledge and skills with structured learning and tutor support.</p>
+    </div>
     <div class="cards">
-      <div class="card">
-        <h3>📚 Online Courses</h3>
-        <p>Access structured courses and learning materials.</p>
-      </div>
+      <article class="card">
+        <div class="symbol">📘</div>
+        <h3>Academic Subjects</h3>
+        <p>Get support with school subjects, exam preparation and understanding challenging topics.</p>
+      </article>
+      <article class="card">
+        <div class="symbol">💻</div>
+        <h3>Digital Skills</h3>
+        <p>Develop technology, computer and practical digital skills for the modern world.</p>
+      </article>
+      <article class="card">
+        <div class="symbol">🌟</div>
+        <h3>Personal Development</h3>
+        <p>Strengthen communication, critical thinking and lifelong learning skills.</p>
+      </article>
+    </div>
+  </section>
 
-      <div class="card">
-        <h3>👨‍🏫 Expert Tutors</h3>
-        <p>Learn from tutors and receive guidance throughout your studies.</p>
-      </div>
+  <section class="soft" id="tutors">
+    <div class="section-heading">
+      <h2>Learn With Great Teachers</h2>
+      <p>We aim to connect learners with qualified and experienced educators from around the world.</p>
+    </div>
+    <div class="cards">
+      <article class="card">
+        <div class="symbol">👩‍🏫</div>
+        <h3>Qualified Educators</h3>
+        <p>Our goal is to work with knowledgeable teachers who care about student progress.</p>
+      </article>
+      <article class="card">
+        <div class="symbol">🌐</div>
+        <h3>Global Community</h3>
+        <p>Help students learn across borders and benefit from diverse educational experiences.</p>
+      </article>
+      <article class="card">
+        <div class="symbol">🎓</div>
+        <h3>Student Focus</h3>
+        <p>Encourage learning that supports academic, professional and personal growth.</p>
+      </article>
+    </div>
+  </section>
 
-      <div class="card">
-        <h3>📝 Practice & Tests</h3>
-        <p>Complete assignments, quizzes and practice assessments.</p>
+  <section id="about">
+    <div class="about-grid">
+      <div>
+        <h2>About Golden Generation Online Academy</h2>
+        <p>
+          Golden Generation Online Academy is an international online school
+          with a mission to make quality education affordable and accessible
+          to students from diverse backgrounds.
+        </p>
+        <p>
+          Our vision is to build a trusted global education community that
+          develops students academically, professionally and personally.
+        </p>
       </div>
-
-      <div class="card">
-        <h3>📊 Track Progress</h3>
-        <p>Monitor your learning progress from your student dashboard.</p>
+      <div class="about-panel">
+        <h3>Our Mission</h3>
+        <p>Make high-quality education more accessible through online learning.</p>
+        <h3>Our Vision</h3>
+        <p>Build a trusted international learning community.</p>
+        <h3>Our Commitment</h3>
+        <p>Support learners with useful resources, effective teaching and opportunities to grow.</p>
       </div>
     </div>
   </section>
 
-  <section class="section" id="tutors">
-    <h2>For Tutors</h2>
-
-    <p class="section-intro">
-      A future tutor dashboard will allow educators to create courses,
-      manage students, upload lessons and track performance.
-    </p>
+  <section class="cta">
+    <h2>Ready to Begin Your Learning Journey?</h2>
+    <p>Create an account to get started with Golden Generation Online Academy.</p>
+    <button class="primary" onclick="openModal('register')">Register as a Student</button>
   </section>
-
-  <section class="section" id="about">
-    <h2>Golden Generation Online Academy</h2>
-
-    <p class="section-intro">
-      Our goal is to build a modern online education platform where
-      students and educators can connect, learn and grow.
-    </p>
-  </section>
-
 </main>
 
 <footer>
-  <p>© 2026 Golden Generation Online Academy. All rights reserved.</p>
+  <p><strong>Golden Generation Online Academy</strong></p>
+  <p>Quality education. Global opportunities. A golden future.</p>
+  <p>© <span id="year"></span> Golden Generation Online Academy</p>
 </footer>
 
-<!-- Registration / Login Modal -->
-
-<div class="modal" id="authModal">
+<div class="modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
   <div class="modal-box">
+    <button class="close" aria-label="Close" onclick="closeModal()">×</button>
 
-    <button class="close" onclick="closeModal()">×</button>
-
-    <div id="registerForm">
-      <h2>Create Your Student Account</h2>
-
-      <p>Join Golden Generation Online Academy and start learning.</p>
-
-      <div class="form-group">
-        <label>Full Name</label>
-        <input type="text" id="fullName" placeholder="Enter your full name">
-      </div>
-
-      <div class="form-group">
-        <label>Email Address</label>
-        <input type="email" id="registerEmail" placeholder="Enter your email">
-      </div>
-
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" id="registerPassword" placeholder="Create a password">
-      </div>
-
-      <button class="btn form-submit" onclick="registerStudent()">
-        Create Student Account
-      </button>
-
-      <div class="switch">
-        Already have an account?
-        <button onclick="showLogin()">Login</button>
-      </div>
+    <div id="registerPanel">
+      <h2 id="authTitle">Student Registration</h2>
+      <p>Create your academy account.</p>
+      <form id="registerForm">
+        <div class="field">
+          <label for="fullName">Full name</label>
+          <input id="fullName" type="text" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="registerEmail">Email address</label>
+          <input id="registerEmail" type="email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="registerPassword">Password (at least 6 characters)</label>
+          <input id="registerPassword" type="password" minlength="6" autocomplete="new-password" required>
+        </div>
+        <button class="secondary full" id="registerButton" type="submit">Create Account</button>
+      </form>
+      <p class="switch">Already registered? <a onclick="showLogin()">Log in</a></p>
     </div>
 
-    <div id="loginForm" style="display:none;">
-      <h2>Welcome Back</h2>
-
-      <p>Login to your student account.</p>
-
-      <div class="form-group">
-        <label>Email Address</label>
-        <input type="email" id="loginEmail" placeholder="Enter your email">
-      </div>
-
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" id="loginPassword" placeholder="Enter your password">
-      </div>
-
-      <button class="btn form-submit" onclick="loginStudent()">
-        Login
-      </button>
-
-      <div class="switch">
-        Don't have an account?
-        <button onclick="showRegister()">Create one</button>
-      </div>
+    <div id="loginPanel" hidden>
+      <h2>Student Login</h2>
+      <p>Sign in to your account.</p>
+      <form id="loginForm">
+        <div class="field">
+          <label for="loginEmail">Email address</label>
+          <input id="loginEmail" type="email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="loginPassword">Password</label>
+          <input id="loginPassword" type="password" autocomplete="current-password" required>
+        </div>
+        <button class="secondary full" id="loginButton" type="submit">Log In</button>
+      </form>
+      <p class="switch">Need an account? <a onclick="showRegister()">Register here</a></p>
     </div>
 
+    <p id="authMessage" role="status" aria-live="polite"></p>
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+  // Supabase project connection
+  const SUPABASE_URL = "https://zywubnsxxfswwyiomewl.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_4aP19D2RabynUKNfIh9H7w_rIY1PHeR";
+
+  const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+
   function openModal(type) {
     document.getElementById("authModal").style.display = "flex";
-
-    if (type === "login") {
-      showLogin();
-    } else {
-      showRegister();
-    }
+    clearAuthMessage();
+    if (type === "login") showLogin();
+    else showRegister();
   }
 
   function closeModal() {
     document.getElementById("authModal").style.display = "none";
+    clearAuthMessage();
   }
 
   function showLogin() {
-    document.getElementById("registerForm").style.display = "none";
-    document.getElementById("loginForm").style.display = "block";
+    document.getElementById("registerPanel").hidden = true;
+    document.getElementById("loginPanel").hidden = false;
+    clearAuthMessage();
   }
 
   function showRegister() {
-    document.getElementById("loginForm").style.display = "none";
-    document.getElementById("registerForm").style.display = "block";
+    document.getElementById("registerPanel").hidden = false;
+    document.getElementById("loginPanel").hidden = true;
+    clearAuthMessage();
   }
 
-  function registerStudent() {
-    const name = document.getElementById("fullName").value;
-    const email = document.getElementById("registerEmail").value;
+  function clearAuthMessage() {
+    document.getElementById("authMessage").textContent = "";
+  }
+
+  function showAuthMessage(message, isError) {
+    const output = document.getElementById("authMessage");
+    output.textContent = message;
+    output.style.color = isError ? "#b42318" : "#176b37";
+  }
+
+  document.getElementById("registerForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const button = document.getElementById("registerButton");
+    const name = document.getElementById("fullName").value.trim();
+    const email = document.getElementById("registerEmail").value.trim();
     const password = document.getElementById("registerPassword").value;
 
-    if (!name || !email || !password) {
-      alert("Please complete all fields.");
+    if (!name || !email || password.length < 6) {
+      showAuthMessage("Enter your name, a valid email and a password of at least 6 characters.", true);
       return;
     }
 
-    alert(
-      "Registration interface is ready. Next we will connect this form to Supabase."
-    );
-  }
+    button.disabled = true;
+    button.textContent = "Creating account...";
+    showAuthMessage("Please wait...");
 
-  function loginStudent() {
-    const email = document.getElementById("loginEmail").value;
+    try {
+      const { data, error } = await supabaseClient.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          data: {
+            full_name: name,
+            account_type: "student"
+          }
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.session) {
+        showAuthMessage("Your account was created and you are signed in. The student dashboard is the next development step.");
+      } else {
+        showAuthMessage("Registration received. Check your email for a confirmation link if required by your account settings.");
+      }
+    } catch (error) {
+      showAuthMessage(error.message || "Registration failed. Please try again.", true);
+    } finally {
+      button.disabled = false;
+      button.textContent = "Create Account";
+    }
+  });
+
+  document.getElementById("loginForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const button = document.getElementById("loginButton");
+    const email = document.getElementById("loginEmail").value.trim();
     const password = document.getElementById("loginPassword").value;
 
-    if (!email || !password) {
-      alert("Please enter your email and password.");
-      return;
-    }
+    button.disabled = true;
+    button.textContent = "Signing in...";
+    showAuthMessage("Please wait...");
 
-    alert(
-      "Login interface is ready. Next we will connect login to Supabase."
-    );
-  }
+    try {
+      const { error } = await supabaseClient.auth.signInWithPassword({
+        email: email,
+        password: password
+      });
+
+      if (error) throw error;
+
+      showAuthMessage("Login successful. Your student dashboard will be connected in the next development step.");
+    } catch (error) {
+      showAuthMessage(error.message || "Login failed. Check your email and password.", true);
+    } finally {
+      button.disabled = false;
+      button.textContent = "Log In";
+    }
+  });
+
+  document.getElementById("authModal").addEventListener("click", function(event) {
+    if (event.target === this) closeModal();
+  });
 </script>
 
 </body>
