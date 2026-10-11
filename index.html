@@ -414,7 +414,11 @@
 
       if (error) throw error;
 
-      showAuthMessage("Login successful. Your student dashboard will be connected in the next development step.");
+      showAuthMessage("Login successful! Welcome to your dashboard.");
+document.getElementById("student-welcome").textContent = "Welcome, " + email + "!";
+document.getElementById("student-email").textContent = email;
+document.getElementById("student-dashboard").classList.remove("hidden");
+document.getElementById("student-dashboard").scrollIntoView({ behavior: "smooth" });
     } catch (error) {
       showAuthMessage(error.message || "Login failed. Check your email and password.", true);
     } finally {
