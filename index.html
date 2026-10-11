@@ -533,5 +533,74 @@ document.getElementById("student-dashboard").scrollIntoView({ behavior: "smooth"
 </section>
 <!-- END STUDENT DASHBOARD -->
 
+<script>
+async function loadAcademyCatalogue() {
+  const dashboard = document.getElementById("student-dashboard");
+  if (!dashboard) return;
+
+  const { data: categories, error: categoryError } =
+    await supabaseClient
+      .from("catalog_categories")
+      .select("id, slug, name, sort_order")
+      .order("sort_order");
+
+  if (categoryError) {
+    console.error("Could not load categories:", categoryError.message);
+    return;
+  }
+
+  let catalogue = dashboard.querySelector("#academy-catalogue");
+  if (!catalogue) {
+    catalogue = document.createElement("div");
+    catalogue.id = "academy-catalogue";
+    catalogue.style.cssText =
+      "margin-top:24px;padding:20px;border:1px solid #dbeafe;border-radius:12px;";
+    dashboard.appendChild(catalogue);
+  }
+
+  catalogue.innerHTML = "<h2>Explore Our Subjects</h2>";
+
+  for (const category of categories || []) {
+    const { data: subjects, error } = await supabaseClient
+      .from("catalog_subjects")
+      .select("name, description")
+      .eq("category_id", category.id)
+      .order("sort_order");
+
+    const section = document.createElement("section");
+    section.style.marginTop = "20px";
+
+    const heading = document.createElement("h3");
+    heading.textContent = category.name;
+    section.appendChild(heading);
+
+    if (error) {
+      const message = document.createElement("p");
+      message.textContent = "Subjects could not be loaded.";
+      section.appendChild(message);
+    } else if (!subjects || subjects.length === 0) {
+      const message = document.createElement("p");
+      message.textContent = "Subjects are being prepared.";
+      section.appendChild(message);
+    } else {
+      const list = document.createElement("ul");
+
+      for (const subject of subjects) {
+        const item = document.createElement("li");
+        item.textContent = subject.name +
+          (subject.description ? " — " + subject.description : "");
+        list.appendChild(item);
+      }
+
+      section.appendChild(list);
+    }
+
+    catalogue.appendChild(section);
+  }
+}
+
+loadAcademyCatalogue();
+</script>
+
 </body>
 </html>
