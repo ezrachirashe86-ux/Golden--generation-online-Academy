@@ -315,6 +315,52 @@
     SUPABASE_PUBLISHABLE_KEY
   );
 
+  async function loadStudentCourses() {
+    const container = document.getElementById("student-courses");
+    if (!container) return;
+
+    container.textContent = "Loading courses...";
+
+    const { data: courses, error } = await supabaseClient
+      .from("courses")
+      .select("id, title, description, image_url, price")
+      .eq("published", true)
+      .order("title");
+
+    if (error) {
+      container.textContent = "Could not load courses: " + error.message;
+      return;
+    }
+
+    container.replaceChildren();
+
+    if (!courses || courses.length === 0) {
+      container.textContent = "No published courses available yet.";
+      return;
+    }
+
+    courses.forEach(function(course) {
+      const card = document.createElement("div");
+      card.style.cssText =
+        "border:1px solid #dbeafe;border-radius:10px;padding:14px;margin-top:12px;";
+
+      const title = document.createElement("h3");
+      title.textContent = course.title || "Untitled course";
+
+      const description = document.createElement("p");
+      description.textContent = course.description || "";
+
+      const price = document.createElement("p");
+      price.textContent =
+        Number(course.price || 0) === 0
+          ? "Free course"
+          : "Price: " + course.price;
+
+      card.append(title, description, price);
+      container.appendChild(card);
+    });
+  }
+
   document.getElementById("year").textContent = new Date().getFullYear();
 
   function openModal(type) {
