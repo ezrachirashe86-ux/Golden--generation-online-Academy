@@ -464,6 +464,7 @@
 document.getElementById("student-welcome").textContent = "Welcome, " + email + "!";
 document.getElementById("student-email").textContent = email;
 document.getElementById("student-dashboard").classList.remove("hidden");
+      await loadStudentCourses();
 document.getElementById("student-dashboard").scrollIntoView({ behavior: "smooth" });
     } catch (error) {
       showAuthMessage(error.message || "Login failed. Check your email and password.", true);
