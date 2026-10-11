@@ -315,7 +315,124 @@
     SUPABASE_PUBLISHABLE_KEY
   );
 
-  async function loadStudentCourses() {
+  
+async function loadStudentCourses() {
+  const container = document.getElementById("student-courses");
+  if (!container) return;
+
+  container.textContent = "Loading courses...";
+
+  const { data: courses, error } = await supabaseClient
+    .from("courses")
+    .select("id, title, description, price")
+    .eq("published", true)
+    .order("title");
+
+  if (error) {
+    container.textContent = "Could not load courses: " + error.message;
+    return;
+  }
+
+  container.replaceChildren();
+
+  if (!courses || courses.length === 0) {
+    container.textContent = "No published courses available yet.";
+    return;
+  }
+
+  courses.forEach(function(course) {
+    const card = document.createElement("div");
+    card.style.cssText =
+      "border:1px solid #dbeafe;border-radius:10px;padding:14px;margin-top:12px;";
+
+    const title = document.createElement("h3");
+    title.textContent = course.title;
+
+    const description = document.createElement("p");
+    description.textContent = course.description || "";
+
+    const price = document.createElement("p");
+    price.textContent = Number(course.price || 0) === 0
+      ? "Free course"
+      : "Price: " + course.price;
+
+    const openButton = document.createElement("button");
+    openButton.type = "button";
+    openButton.textContent = "Open Course";
+    openButton.style.cssText =
+      "background:#1769aa;color:white;padding:10px 16px;border-radius:7px;";
+
+    openButton.addEventListener("click", function() {
+      openAcademyCourse(course);
+    });
+
+    card.append(title, description, price, openButton);
+    container.appendChild(card);
+  });
+}
+
+async function openAcademyCourse(course) {
+  const container = document.getElementById("student-courses");
+  if (!container) return;
+
+  container.replaceChildren();
+
+  const backButton = document.createElement("button");
+  backButton.type = "button";
+  backButton.textContent = "← Back to Courses";
+  backButton.style.cssText =
+    "background:#1769aa;color:white;padding:10px 16px;border-radius:7px;";
+  backButton.addEventListener("click", loadStudentCourses);
+
+  const heading = document.createElement("h3");
+  heading.textContent = course.title;
+
+  const description = document.createElement("p");
+  description.textContent = course.description || "Welcome to this course.";
+
+  const lessonsHeading = document.createElement("h4");
+  lessonsHeading.textContent = "Course Modules and Lessons";
+
+  const status = document.createElement("p");
+  status.textContent = "Loading course modules...";
+
+  container.append(backButton, heading, description, lessonsHeading, status);
+
+  const { data: modules, error } = await supabaseClient
+    .from("modules")
+    .select("id, title, position")
+    .eq("course_id", course.id)
+    .order("position", { ascending: true });
+
+  if (error) {
+    status.textContent = "Could not load modules: " + error.message;
+    return;
+  }
+
+  status.remove();
+
+  if (!modules || modules.length === 0) {
+    const message = document.createElement("p");
+    message.textContent =
+      "No modules have been added to this course yet.";
+    container.appendChild(message);
+    return;
+  }
+
+  modules.forEach(function(module) {
+    const lesson = document.createElement("div");
+    lesson.style.cssText =
+      "border:1px solid #dbeafe;border-radius:8px;padding:12px;margin-top:10px;";
+
+    const lessonTitle = document.createElement("p");
+    lessonTitle.textContent =
+      (module.position || "") + " " + module.title;
+
+    lesson.appendChild(lessonTitle);
+    container.appendChild(lesson);
+  });
+}
+
     const container = document.getElementById("student-courses");
     if (!container) return;
 
