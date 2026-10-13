@@ -1,726 +1,284 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Golden Generation Online Academy</title>
   <meta name="description" content="Quality online education connecting students with qualified tutors worldwide.">
   <style>
-    :root {
-      --navy: #102746;
-      --blue: #1769aa;
-      --gold: #f2b632;
-      --light: #f4f7fb;
-      --text: #243247;
-    }
-
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      color: var(--text);
-      line-height: 1.6;
-    }
-    header {
-      background: white;
-      padding: 14px 6%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-      box-shadow: 0 2px 10px #00000010;
-    }
-    .brand { color: var(--navy); font-weight: bold; font-size: 19px; }
-    .brand span { color: #c58b08; }
-    nav { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
-    nav a { color: var(--navy); text-decoration: none; font-weight: 600; }
-    a:hover { color: var(--blue); }
-    button {
-      border: 0;
-      border-radius: 7px;
-      padding: 12px 18px;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 15px;
-    }
-    .primary { background: var(--gold); color: var(--navy); }
-    .secondary { background: var(--blue); color: white; }
-    .hero {
-      background: linear-gradient(120deg, #102746, #1769aa);
-      color: white;
-      padding: 78px 7%;
-      display: grid;
-      grid-template-columns: 1.5fr 1fr;
-      gap: 30px;
-      align-items: center;
-    }
-    .hero h1 { font-size: clamp(32px, 5vw, 52px); line-height: 1.15; margin: 0 0 20px; }
-    .hero p { font-size: 18px; max-width: 650px; }
-    .hero-panel {
-      background: #ffffff12;
-      border: 1px solid #ffffff40;
-      border-radius: 16px;
-      padding: 26px;
-    }
-    section { padding: 58px 7%; }
-    .section-heading { text-align: center; margin: 0 auto 32px; max-width: 700px; }
-    .section-heading h2 { color: var(--navy); font-size: 30px; margin-bottom: 8px; }
-    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-    .card {
-      background: white;
-      border-radius: 12px;
-      padding: 23px;
-      box-shadow: 0 4px 20px #10274612;
-      border: 1px solid #e6ebf2;
-    }
-    .card h3 { color: var(--navy); }
-    .symbol { font-size: 34px; }
-    .soft { background: var(--light); }
-    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: center; }
-    .about-panel { background: white; border-radius: 14px; padding: 25px; }
-    .cta { background: var(--navy); color: white; text-align: center; }
-    .cta h2 { font-size: 30px; }
-    footer { background: #091a30; color: white; padding: 28px 7%; text-align: center; }
-    footer a { color: #f8cf69; }
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: #07172dcc;
-      z-index: 10;
-      padding: 18px;
-      align-items: center;
-      justify-content: center;
-      overflow-y: auto;
-    }
-    .modal-box {
-      background: white;
-      width: 100%;
-      max-width: 440px;
-      border-radius: 14px;
-      padding: 25px;
-      position: relative;
-      margin: auto;
-    }
-    .modal-box h2 { color: var(--navy); margin-top: 0; }
-    .close {
-      position: absolute;
-      top: 8px;
-      right: 10px;
-      background: transparent;
-      font-size: 26px;
-      padding: 4px 10px;
-    }
-    .field { margin: 14px 0; }
-    .field label { display: block; font-weight: bold; margin-bottom: 5px; }
-    .field input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #cbd4e0;
-      border-radius: 7px;
-      font-size: 16px;
-    }
-    .full { width: 100%; }
-    .switch { text-align: center; font-size: 14px; }
-    .switch a { color: var(--blue); cursor: pointer; font-weight: bold; }
-    #authMessage { font-size: 14px; overflow-wrap: anywhere; }
-    @media (max-width: 760px) {
-      header { justify-content: center; }
-      nav { justify-content: center; }
-      .hero { grid-template-columns: 1fr; padding: 52px 6%; }
-      .cards { grid-template-columns: 1fr; }
-      .about-grid { grid-template-columns: 1fr; }
-      section { padding: 42px 6%; }
-    }
+    :root{--navy:#102746;--blue:#1769aa;--gold:#f2b632;--light:#f4f7fb;--text:#243247;--border:#dbe5f0}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,sans-serif;color:var(--text);line-height:1.6}
+    header{background:#fff;padding:14px 6%;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;box-shadow:0 2px 10px #0001}
+    .brand{color:var(--navy);font-weight:bold;font-size:19px}.brand span{color:#c58b08}
+    nav{display:flex;gap:12px;flex-wrap:wrap;align-items:center}nav a{color:var(--navy);text-decoration:none;font-weight:600}
+    button{border:0;border-radius:7px;padding:12px 18px;font-weight:bold;cursor:pointer;font-size:15px}
+    button:disabled{opacity:.6;cursor:wait}.primary{background:var(--gold);color:var(--navy)}.secondary{background:var(--blue);color:#fff}
+    .hero{background:linear-gradient(120deg,#102746,#1769aa);color:#fff;padding:64px 7%;display:grid;grid-template-columns:1.5fr 1fr;gap:30px;align-items:center}
+    .hero h1{font-size:clamp(32px,5vw,52px);line-height:1.15;margin:0 0 20px}.hero p{font-size:18px;max-width:650px}
+    .hero-panel,.about-panel{background:#ffffff12;border:1px solid #ffffff40;border-radius:16px;padding:26px}
+    section.content{padding:48px 7%}.soft{background:var(--light)}.section-heading{text-align:center;margin:0 auto 28px;max-width:700px}
+    .section-heading h2{color:var(--navy);font-size:30px;margin-bottom:8px}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+    .card{background:#fff;border-radius:12px;padding:22px;box-shadow:0 4px 20px #10274612;border:1px solid #e6ebf2}.card h3{color:var(--navy);margin-top:8px}
+    .symbol{font-size:32px}.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center}
+    .cta{background:var(--navy);color:#fff;text-align:center;padding:44px 7%}.cta h2{font-size:30px}
+    footer{background:#091a30;color:#fff;padding:28px 7%;text-align:center}
+    .modal{display:none;position:fixed;inset:0;background:#07172dcc;z-index:10;padding:18px;align-items:center;justify-content:center;overflow-y:auto}
+    .modal-box{background:#fff;width:100%;max-width:440px;border-radius:14px;padding:25px;position:relative;margin:auto}
+    .modal-box h2{color:var(--navy);margin-top:0}.close{position:absolute;top:8px;right:10px;background:transparent;font-size:26px;padding:4px 10px}
+    .field{margin:14px 0}.field label{display:block;font-weight:bold;margin-bottom:5px}.field input{width:100%;padding:12px;border:1px solid #cbd4e0;border-radius:7px;font-size:16px}
+    .full{width:100%}.switch{text-align:center;font-size:14px}.switch a{color:var(--blue);cursor:pointer;font-weight:bold}#authMessage{font-size:14px;overflow-wrap:anywhere}
+    #student-dashboard{display:none;max-width:1100px;margin:30px auto;padding:24px;color:#172554}
+    .dashboard-banner{background:#123b70;color:#fff;padding:26px;border-radius:16px}
+    .dashboard-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:20px}
+    .dashboard-card{padding:18px;border:1px solid var(--border);border-radius:12px;min-width:0}
+    .catalogue{margin-top:24px;padding:20px;border:1px solid var(--border);border-radius:12px;background:#fff}
+    .category{margin-top:22px;padding-top:14px;border-top:1px solid #e6ebf2}.subject-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;padding:0;list-style:none}
+    .subject-item{border:1px solid #dbe5f0;border-radius:9px;padding:12px;background:#fbfdff}.subject-item p{margin:5px 0 10px;font-size:14px}
+    .small-button{padding:8px 12px;font-size:14px}.muted{color:#64748b}.notice{padding:12px;border-radius:8px;background:#eff6ff;color:#1e3a8a}
+    .course-panel{margin-top:20px;padding:18px;border:1px solid var(--border);border-radius:12px}.lesson{padding:12px;border:1px solid #e6ebf2;border-radius:8px;margin-top:10px}
+    @media(max-width:760px){header{justify-content:center}nav{justify-content:center}.hero{grid-template-columns:1fr;padding:45px 6%}.cards{grid-template-columns:1fr}.about-grid{grid-template-columns:1fr}section.content{padding:38px 6%}#student-dashboard{padding:14px}}
   </style>
 </head>
 <body>
-
 <header>
   <div class="brand">GOLDEN GENERATION <span>ACADEMY</span></div>
   <nav>
-    <a href="#home">Home</a>
-    <a href="#courses">Courses</a>
-    <a href="#tutors">Tutors</a>
-    <a href="#about">About</a>
-    <button class="secondary" onclick="openModal('login')">Student Login</button>
-    <button class="primary" onclick="openModal('register')">Register</button>
+    <a href="#home">Home</a><a href="#courses">Courses</a><a href="#tutors">Tutors</a><a href="#about">About</a>
+    <button class="secondary" type="button" onclick="openModal('login')">Student Login</button>
+    <button class="primary" type="button" onclick="openModal('register')">Register</button>
   </nav>
 </header>
-
 <main>
   <section class="hero" id="home">
-    <div>
-      <p><strong>LEARN WITHOUT LIMITS</strong></p>
-      <h1>Quality Education for a Golden Future</h1>
-      <p>
-        Learn from qualified, experienced tutors through an international
-        online school designed to make quality education accessible.
-      </p>
-      <button class="primary" onclick="openModal('register')">Join Our Academy</button>
-      <button class="secondary" onclick="document.getElementById('courses').scrollIntoView()">Explore Courses</button>
+    <div><p><strong>LEARN WITHOUT LIMITS</strong></p><h1>Quality Education for a Golden Future</h1>
+      <p>Learn from qualified, experienced tutors through an international online school designed to make quality education accessible.</p>
+      <button class="primary" type="button" onclick="openModal('register')">Join Our Academy</button>
+      <button class="secondary" type="button" onclick="document.getElementById('courses').scrollIntoView()">Explore Courses</button>
     </div>
-    <div class="hero-panel">
-      <h2>Your Future Starts Here</h2>
-      <p>🌍 Learn from anywhere</p>
-      <p>👩‍🏫 Connect with qualified tutors</p>
-      <p>📚 Access learning resources</p>
-      <p>🎯 Build skills and confidence</p>
-    </div>
+    <div class="hero-panel"><h2>Your Future Starts Here</h2><p>🌍 Learn from anywhere</p><p>👩‍🏫 Connect with qualified tutors</p><p>📚 Access learning resources</p><p>🎯 Build skills and confidence</p></div>
   </section>
-
-  <section id="courses">
-    <div class="section-heading">
-      <h2>Explore Our Learning Areas</h2>
-      <p>Build knowledge and skills with structured learning and tutor support.</p>
-    </div>
+  <section class="content" id="courses"><div class="section-heading"><h2>Explore Our Learning Areas</h2><p>School subjects, digital skills and personal development.</p></div>
     <div class="cards">
-      <article class="card">
-        <div class="symbol">📘</div>
-        <h3>Academic Subjects</h3>
-        <p>Get support with school subjects, exam preparation and understanding challenging topics.</p>
-      </article>
-      <article class="card">
-        <div class="symbol">💻</div>
-        <h3>Digital Skills</h3>
-        <p>Develop technology, computer and practical digital skills for the modern world.</p>
-      </article>
-      <article class="card">
-        <div class="symbol">🌟</div>
-        <h3>Personal Development</h3>
-        <p>Strengthen communication, critical thinking and lifelong learning skills.</p>
-      </article>
+      <article class="card"><div class="symbol">📘</div><h3>Academic Subjects</h3><p>School subjects, exam preparation and support with challenging topics.</p></article>
+      <article class="card"><div class="symbol">💻</div><h3>Digital Skills</h3><p>Technology, computer and practical digital skills.</p></article>
+      <article class="card"><div class="symbol">🌟</div><h3>Personal Development</h3><p>Communication, critical thinking and lifelong learning.</p></article>
     </div>
   </section>
-
-  <section class="soft" id="tutors">
-    <div class="section-heading">
-      <h2>Learn With Great Teachers</h2>
-      <p>We aim to connect learners with qualified and experienced educators from around the world.</p>
-    </div>
+  <section class="content soft" id="tutors"><div class="section-heading"><h2>Learn With Great Teachers</h2><p>We aim to connect learners with qualified and experienced educators around the world.</p></div>
     <div class="cards">
-      <article class="card">
-        <div class="symbol">👩‍🏫</div>
-        <h3>Qualified Educators</h3>
-        <p>Our goal is to work with knowledgeable teachers who care about student progress.</p>
-      </article>
-      <article class="card">
-        <div class="symbol">🌐</div>
-        <h3>Global Community</h3>
-        <p>Help students learn across borders and benefit from diverse educational experiences.</p>
-      </article>
-      <article class="card">
-        <div class="symbol">🎓</div>
-        <h3>Student Focus</h3>
-        <p>Encourage learning that supports academic, professional and personal growth.</p>
-      </article>
+      <article class="card"><div class="symbol">👩‍🏫</div><h3>Qualified Educators</h3><p>Knowledgeable teachers who care about student progress.</p></article>
+      <article class="card"><div class="symbol">🌐</div><h3>Global Community</h3><p>Learn across borders and benefit from diverse educational experiences.</p></article>
+      <article class="card"><div class="symbol">🎓</div><h3>Student Focus</h3><p>Learning that supports academic, professional and personal growth.</p></article>
     </div>
   </section>
-
-  <section id="about">
-    <div class="about-grid">
-      <div>
-        <h2>About Golden Generation Online Academy</h2>
-        <p>
-          Golden Generation Online Academy is an international online school
-          with a mission to make quality education affordable and accessible
-          to students from diverse backgrounds.
-        </p>
-        <p>
-          Our vision is to build a trusted global education community that
-          develops students academically, professionally and personally.
-        </p>
-      </div>
-      <div class="about-panel">
-        <h3>Our Mission</h3>
-        <p>Make high-quality education more accessible through online learning.</p>
-        <h3>Our Vision</h3>
-        <p>Build a trusted international learning community.</p>
-        <h3>Our Commitment</h3>
-        <p>Support learners with useful resources, effective teaching and opportunities to grow.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="cta">
-    <h2>Ready to Begin Your Learning Journey?</h2>
-    <p>Create an account to get started with Golden Generation Online Academy.</p>
-    <button class="primary" onclick="openModal('register')">Register as a Student</button>
-  </section>
+  <section class="content" id="about"><div class="about-grid"><div><h2>About Golden Generation Online Academy</h2>
+    <p>Golden Generation Online Academy is an international online school with a mission to make quality education affordable and accessible to students from diverse backgrounds.</p>
+    <p>Our vision is to build a trusted global education community that develops students academically, professionally and personally.</p></div>
+    <div class="card"><h3>Our Mission</h3><p>Make high-quality education more accessible through online learning.</p><h3>Our Vision</h3><p>Build a trusted international learning community.</p><h3>Our Commitment</h3><p>Support learners with useful resources, effective teaching and opportunities to grow.</p></div>
+  </div></section>
+  <section class="cta"><h2>Ready to Begin Your Learning Journey?</h2><p>Create an account to get started.</p><button class="primary" type="button" onclick="openModal('register')">Register as a Student</button></section>
 </main>
-
-<footer>
-  <p><strong>Golden Generation Online Academy</strong></p>
-  <p>Quality education. Global opportunities. A golden future.</p>
-  <p>© <span id="year"></span> Golden Generation Online Academy</p>
-</footer>
+<footer><p><strong>Golden Generation Online Academy</strong></p><p>Quality education. Global opportunities. A golden future.</p><p>© <span id="year"></span> Golden Generation Online Academy</p></footer>
 
 <div class="modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
-  <div class="modal-box">
-    <button class="close" aria-label="Close" onclick="closeModal()">×</button>
-
-    <div id="registerPanel">
-      <h2 id="authTitle">Student Registration</h2>
-      <p>Create your academy account.</p>
+  <div class="modal-box"><button class="close" type="button" aria-label="Close" onclick="closeModal()">×</button>
+    <div id="registerPanel"><h2 id="authTitle">Student Registration</h2><p>Create your academy account.</p>
       <form id="registerForm">
-        <div class="field">
-          <label for="fullName">Full name</label>
-          <input id="fullName" type="text" autocomplete="name" required>
-        </div>
-        <div class="field">
-          <label for="registerEmail">Email address</label>
-          <input id="registerEmail" type="email" autocomplete="email" required>
-        </div>
-        <div class="field">
-          <label for="registerPassword">Password (at least 6 characters)</label>
-          <input id="registerPassword" type="password" minlength="6" autocomplete="new-password" required>
-        </div>
+        <div class="field"><label for="fullName">Full name</label><input id="fullName" type="text" autocomplete="name" required></div>
+        <div class="field"><label for="registerEmail">Email address</label><input id="registerEmail" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="registerPassword">Password (at least 6 characters)</label><input id="registerPassword" type="password" minlength="6" autocomplete="new-password" required></div>
         <button class="secondary full" id="registerButton" type="submit">Create Account</button>
-      </form>
-      <p class="switch">Already registered? <a onclick="showLogin()">Log in</a></p>
+      </form><p class="switch">Already registered? <a href="#" onclick="showLogin();return false">Log in</a></p>
     </div>
-
-    <div id="loginPanel" hidden>
-      <h2>Student Login</h2>
-      <p>Sign in to your account.</p>
+    <div id="loginPanel" hidden><h2>Student Login</h2><p>Sign in to your account.</p>
       <form id="loginForm">
-        <div class="field">
-          <label for="loginEmail">Email address</label>
-          <input id="loginEmail" type="email" autocomplete="email" required>
-        </div>
-        <div class="field">
-          <label for="loginPassword">Password</label>
-          <input id="loginPassword" type="password" autocomplete="current-password" required>
-        </div>
+        <div class="field"><label for="loginEmail">Email address</label><input id="loginEmail" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="loginPassword">Password</label><input id="loginPassword" type="password" autocomplete="current-password" required></div>
         <button class="secondary full" id="loginButton" type="submit">Log In</button>
-      </form>
-      <p class="switch">Need an account? <a onclick="showRegister()">Register here</a></p>
+      </form><p class="switch">Need an account? <a href="#" onclick="showRegister();return false">Register here</a></p>
     </div>
-
     <p id="authMessage" role="status" aria-live="polite"></p>
   </div>
 </div>
 
+<section id="student-dashboard">
+  <div class="dashboard-banner"><p style="margin:0 0 8px">GOLDEN GENERATION ONLINE ACADEMY</p><h1 style="margin:0 0 8px">Student Dashboard</h1><p id="student-welcome" style="margin:0">Welcome to your learning space!</p></div>
+  <div class="dashboard-grid">
+    <div class="dashboard-card"><h2>📚 Published Courses</h2><p class="muted">Courses with lessons appear here.</p><div id="student-courses">Sign in to load your courses.</div></div>
+    <div class="dashboard-card"><h2>🗓️ Class Schedule</h2><p>Your timetable will appear here when classes are scheduled.</p></div>
+    <div class="dashboard-card"><h2>📖 Learning Resources</h2><p>Your learning resources will appear here.</p></div>
+    <div class="dashboard-card"><h2>📝 Assessments</h2><p>Your assignments and assessments will appear here.</p></div>
+    <div class="dashboard-card"><h2>📈 My Progress</h2><p>Your learning progress will appear here.</p></div>
+    <div class="dashboard-card"><h2>👤 My Account</h2><p id="student-email"></p><button id="student-signout" type="button" class="secondary">Sign Out</button></div>
+  </div>
+  <div class="catalogue" id="academy-catalogue"><h2>Explore Our Subjects</h2><p>Sign in to load the subject catalogue.</p></div>
+  <div class="course-panel" id="course-detail" hidden></div>
+</section>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // Supabase project connection
-  const SUPABASE_URL = "https://zywubnsxxfswwyiomewl.supabase.co";
-  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_4aP19D2RabynUKNfIh9H7w_rIY1PHeR";
+"use strict";
+const SUPABASE_URL = "https://zywubnsxxfswwyiomewl.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_4aP19D2RabynUKNfIh9H7w_rYI1PHeR";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+const $ = (id) => document.getElementById(id);
 
-  const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-  );
+$("year").textContent = new Date().getFullYear();
 
-  
+function openModal(type) {
+  $("authModal").style.display = "flex";
+  clearAuthMessage();
+  type === "login" ? showLogin() : showRegister();
+}
+function closeModal() {$("authModal").style.display = "none"; clearAuthMessage();}
+function showLogin() {$("registerPanel").hidden = true; $("loginPanel").hidden = false; clearAuthMessage();}
+function showRegister() {$("registerPanel").hidden = false; $("loginPanel").hidden = true; clearAuthMessage();}
+function clearAuthMessage() {$("authMessage").textContent = "";}
+function showAuthMessage(message, isError = false) {
+  $("authMessage").textContent = message;
+  $("authMessage").style.color = isError ? "#b42318" : "#176b37";
+}
+
+$("authModal").addEventListener("click", (event) => {if (event.target === $("authModal")) closeModal();});
+
+$("registerForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const button = $("registerButton");
+  const name = $("fullName").value.trim();
+  const email = $("registerEmail").value.trim();
+  const password = $("registerPassword").value;
+  if (!name || !email || password.length < 6) {showAuthMessage("Enter your name, a valid email and a password of at least 6 characters.", true); return;}
+  button.disabled = true; button.textContent = "Creating account..."; showAuthMessage("Please wait...");
+  try {
+    const {data, error} = await supabaseClient.auth.signUp({email, password, options:{data:{full_name:name, account_type:"student"}}});
+    if (error) throw error;
+    showAuthMessage(data.session ? "Account created. You are signed in." : "Registration received. Check your email for a confirmation link if required.");
+    if (data.session) await showDashboard(email);
+  } catch (error) {showAuthMessage(error.message || "Registration failed. Please try again.", true);}
+  finally {button.disabled = false; button.textContent = "Create Account";}
+});
+
+$("loginForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const button = $("loginButton");
+  const email = $("loginEmail").value.trim();
+  const password = $("loginPassword").value;
+  button.disabled = true; button.textContent = "Signing in..."; showAuthMessage("Please wait...");
+  try {
+    const {error} = await supabaseClient.auth.signInWithPassword({email, password});
+    if (error) throw error;
+    showAuthMessage("Login successful. Welcome to your dashboard.");
+    await showDashboard(email);
+  } catch (error) {showAuthMessage(error.message || "Login failed. Check your email and password.", true);}
+  finally {button.disabled = false; button.textContent = "Log In";}
+});
+
+async function showDashboard(email) {
+  $("student-welcome").textContent = "Welcome, " + email + "!";
+  $("student-email").textContent = email;
+  $("student-dashboard").style.display = "block";
+  closeModal();
+  $("student-dashboard").scrollIntoView({behavior:"smooth"});
+  await Promise.allSettled([loadStudentCourses(), loadAcademyCatalogue()]);
+}
+
 async function loadStudentCourses() {
-  const container = document.getElementById("student-courses");
-  if (!container) return;
-
-  container.textContent = "Loading courses...";
-
-  const { data: courses, error } = await supabaseClient
-    .from("courses")
-    .select("id, title, description, price")
-    .eq("published", true)
-    .order("title");
-
-  if (error) {
-    container.textContent = "Could not load courses: " + error.message;
-    return;
-  }
-
+  const container = $("student-courses");
+  container.textContent = "Loading published courses...";
+  const {data:courses, error} = await supabaseClient.from("courses")
+    .select("id, title, description, price, published")
+    .eq("published", true).order("title");
+  if (error) {container.textContent = "Could not load courses: " + error.message; return;}
   container.replaceChildren();
-
-  if (!courses || courses.length === 0) {
-    container.textContent = "No published courses available yet.";
-    return;
-  }
-
-  courses.forEach(function(course) {
+  if (!courses || courses.length === 0) {container.textContent = "No published courses found in the courses table yet. See the subject catalogue below."; return;}
+  for (const course of courses) {
     const card = document.createElement("div");
-    card.style.cssText =
-      "border:1px solid #dbeafe;border-radius:10px;padding:14px;margin-top:12px;";
+    card.className = "subject-item";
+    const title = document.createElement("h3"); title.textContent = course.title || "Untitled course";
+    const description = document.createElement("p"); description.textContent = course.description || "Course details";
+    const price = document.createElement("p"); price.textContent = Number(course.price || 0) === 0 ? "Free course" : "Price: " + course.price;
+    const open = document.createElement("button"); open.type = "button"; open.className = "secondary small-button"; open.textContent = "Open Course";
+    open.addEventListener("click", () => openAcademyCourse(course));
+    card.append(title, description, price, open); container.appendChild(card);
+  }
+}
 
-    const title = document.createElement("h3");
-    title.textContent = course.title;
+async function loadAcademyCatalogue() {
+  const catalogue = $("academy-catalogue");
+  catalogue.innerHTML = "<h2>Explore Our Subjects</h2><p>Loading categories and subjects...</p>";
+  const {data:categories, error} = await supabaseClient.from("catalog_categories")
+    .select("id, slug, name, sort_order").order("sort_order");
+  if (error) {catalogue.innerHTML = ""; const msg = document.createElement("p"); msg.className="notice"; msg.textContent = "Could not load subject categories: " + error.message; catalogue.append(msg); return;}
+  catalogue.innerHTML = "<h2>Explore Our Subjects</h2><p class='muted'>Choose a subject to look for a matching published course. A subject listing is not itself a lesson/course.</p>";
+  if (!categories || categories.length === 0) {catalogue.append("No categories are available yet."); return;}
+  for (const category of categories) {
+    const section = document.createElement("section"); section.className = "category"; section.style.padding = "12px 0";
+    const heading = document.createElement("h3"); heading.textContent = category.name; section.append(heading);
+    const list = document.createElement("ul"); list.className = "subject-list"; section.append(list); catalogue.append(section);
+    const {data:subjects, error:subjectError} = await supabaseClient.from("catalog_subjects")
+      .select("id, name, description, sort_order").eq("category_id", category.id).order("sort_order");
+    if (subjectError) {const message=document.createElement("p"); message.textContent="Could not load subjects: "+subjectError.message; section.append(message); continue;}
+    if (!subjects || subjects.length === 0) {const message=document.createElement("p"); message.textContent="Subjects are being prepared."; section.append(message); continue;}
+    for (const subject of subjects) {
+      const item = document.createElement("li"); item.className = "subject-item";
+      const title = document.createElement("strong"); title.textContent = subject.name;
+      const description = document.createElement("p"); description.textContent = subject.description || "Explore this subject.";
+      const button = document.createElement("button"); button.type="button"; button.className="secondary small-button"; button.textContent="Find Course";
+      button.addEventListener("click", () => findSubjectCourse(subject));
+      item.append(title, description, button); list.append(item);
+    }
+  }
+}
 
-    const description = document.createElement("p");
-    description.textContent = course.description || "";
-
-    const price = document.createElement("p");
-    price.textContent = Number(course.price || 0) === 0
-      ? "Free course"
-      : "Price: " + course.price;
-
-    const openButton = document.createElement("button");
-    openButton.type = "button";
-    openButton.textContent = "Open Course";
-    openButton.style.cssText =
-      "background:#1769aa;color:white;padding:10px 16px;border-radius:7px;";
-
-    openButton.addEventListener("click", function() {
-      openAcademyCourse(course);
-    });
-
-    card.append(title, description, price, openButton);
-    container.appendChild(card);
-  });
+async function findSubjectCourse(subject) {
+  const detail = $("course-detail"); detail.hidden = false; detail.innerHTML = "";
+  const heading = document.createElement("h2"); heading.textContent = subject.name;
+  const message = document.createElement("p"); message.textContent = "Checking published courses for this subject...";
+  detail.append(heading, message); detail.scrollIntoView({behavior:"smooth",block:"start"});
+  const {data:courses, error} = await supabaseClient.from("courses")
+    .select("id, title, description, price, published").eq("published", true).order("title");
+  if (error) {message.textContent = "Could not search courses: " + error.message; return;}
+  const needle = subject.name.trim().toLowerCase();
+  const matches = (courses || []).filter(course => (course.title || "").toLowerCase().includes(needle) || needle.includes((course.title || "").toLowerCase()));
+  detail.replaceChildren(heading);
+  if (!matches.length) {
+    const p = document.createElement("p"); p.textContent = "This subject is listed in the catalogue, but there is no published course with a matching title in the courses table yet. To provide lessons for it, a course record and its modules/lessons must be added in Supabase."; detail.append(p); return;
+  }
+  for (const course of matches) {
+    const p = document.createElement("p"); p.textContent = course.description || "";
+    const button = document.createElement("button"); button.type="button"; button.className="secondary"; button.textContent="Open " + course.title;
+    button.addEventListener("click", () => openAcademyCourse(course));
+    detail.append(p, button);
+  }
 }
 
 async function openAcademyCourse(course) {
-  const container = document.getElementById("student-courses");
-  if (!container) return;
-
-  container.replaceChildren();
-
-  const backButton = document.createElement("button");
-  backButton.type = "button";
-  backButton.textContent = "← Back to Courses";
-  backButton.style.cssText =
-    "background:#1769aa;color:white;padding:10px 16px;border-radius:7px;";
-  backButton.addEventListener("click", loadStudentCourses);
-
-  const heading = document.createElement("h3");
-  heading.textContent = course.title;
-
-  const description = document.createElement("p");
-  description.textContent = course.description || "Welcome to this course.";
-
-  const lessonsHeading = document.createElement("h4");
-  lessonsHeading.textContent = "Course Modules and Lessons";
-
-  const status = document.createElement("p");
-  status.textContent = "Loading course modules...";
-
-  container.append(backButton, heading, description, lessonsHeading, status);
-
-  const { data: modules, error } = await supabaseClient
-    .from("modules")
-    .select("id, title, position")
-    .eq("course_id", course.id)
-    .order("position", { ascending: true });
-
-  if (error) {
-    status.textContent = "Could not load modules: " + error.message;
-    return;
-  }
-
+  const container = $("course-detail"); container.hidden = false; container.innerHTML = "";
+  const back = document.createElement("button"); back.type="button"; back.className="secondary small-button"; back.textContent="← Back to dashboard"; back.addEventListener("click", () => $("student-dashboard").scrollIntoView({behavior:"smooth"}));
+  const heading = document.createElement("h2"); heading.textContent = course.title || "Course";
+  const description = document.createElement("p"); description.textContent = course.description || "Welcome to this course.";
+  const lessonsHeading = document.createElement("h3"); lessonsHeading.textContent = "Course Modules and Lessons";
+  const status = document.createElement("p"); status.textContent = "Loading modules...";
+  container.append(back, heading, description, lessonsHeading, status); container.scrollIntoView({behavior:"smooth",block:"start"});
+  const {data:modules, error} = await supabaseClient.from("modules").select("id, title, position").eq("course_id", course.id).order("position",{ascending:true});
+  if (error) {status.textContent = "Could not load modules: " + error.message; return;}
   status.remove();
-
-  if (!modules || modules.length === 0) {
-    const message = document.createElement("p");
-    message.textContent =
-      "No modules have been added to this course yet.";
-    container.appendChild(message);
-    return;
-  }
-
-  modules.forEach(function(module) {
-    const lesson = document.createElement("div");
-    lesson.style.cssText =
-      "border:1px solid #dbeafe;border-radius:8px;padding:12px;margin-top:10px;";
-
-    const lessonTitle = document.createElement("p");
-    lessonTitle.textContent =
-      (module.position || "") + " " + module.title;
-
-    lesson.appendChild(lessonTitle);
-    container.appendChild(lesson);
-  });
-}
-
-    const container = document.getElementById("student-courses");
-    if (!container) return;
-
-    container.textContent = "Loading courses...";
-
-    const { data: courses, error } = await supabaseClient
-      .from("courses")
-      .select("id, title, description, image_url, price")
-      .eq("published", true)
-      .order("title");
-
-    if (error) {
-      container.textContent = "Could not load courses: " + error.message;
-      return;
-    }
-
-    container.replaceChildren();
-
-    if (!courses || courses.length === 0) {
-      container.textContent = "No published courses available yet.";
-      return;
-    }
-
-    courses.forEach(function(course) {
-      const card = document.createElement("div");
-      card.style.cssText =
-        "border:1px solid #dbeafe;border-radius:10px;padding:14px;margin-top:12px;";
-
-      const title = document.createElement("h3");
-      title.textContent = course.title || "Untitled course";
-
-      const description = document.createElement("p");
-      description.textContent = course.description || "";
-
-      const price = document.createElement("p");
-      price.textContent =
-        Number(course.price || 0) === 0
-          ? "Free course"
-          : "Price: " + course.price;
-
-      card.append(title, description, price);
-      container.appendChild(card);
-    });
-  }
-
-  document.getElementById("year").textContent = new Date().getFullYear();
-
-  function openModal(type) {
-    document.getElementById("authModal").style.display = "flex";
-    clearAuthMessage();
-    if (type === "login") showLogin();
-    else showRegister();
-  }
-
-  function closeModal() {
-    document.getElementById("authModal").style.display = "none";
-    clearAuthMessage();
-  }
-
-  function showLogin() {
-    document.getElementById("registerPanel").hidden = true;
-    document.getElementById("loginPanel").hidden = false;
-    clearAuthMessage();
-  }
-
-  function showRegister() {
-    document.getElementById("registerPanel").hidden = false;
-    document.getElementById("loginPanel").hidden = true;
-    clearAuthMessage();
-  }
-
-  function clearAuthMessage() {
-    document.getElementById("authMessage").textContent = "";
-  }
-
-  function showAuthMessage(message, isError) {
-    const output = document.getElementById("authMessage");
-    output.textContent = message;
-    output.style.color = isError ? "#b42318" : "#176b37";
-  }
-
-  document.getElementById("registerForm").addEventListener("submit", async function(event) {
-    event.preventDefault();
-
-    const button = document.getElementById("registerButton");
-    const name = document.getElementById("fullName").value.trim();
-    const email = document.getElementById("registerEmail").value.trim();
-    const password = document.getElementById("registerPassword").value;
-
-    if (!name || !email || password.length < 6) {
-      showAuthMessage("Enter your name, a valid email and a password of at least 6 characters.", true);
-      return;
-    }
-
-    button.disabled = true;
-    button.textContent = "Creating account...";
-    showAuthMessage("Please wait...");
-
-    try {
-      const { data, error } = await supabaseClient.auth.signUp({
-        email: email,
-        password: password,
-        options: {
-          data: {
-            full_name: name,
-            account_type: "student"
-          }
-        }
-      });
-
-      if (error) throw error;
-
-      if (data.session) {
-        showAuthMessage("Your account was created and you are signed in. The student dashboard is the next development step.");
-      } else {
-        showAuthMessage("Registration received. Check your email for a confirmation link if required by your account settings.");
-      }
-    } catch (error) {
-      showAuthMessage(error.message || "Registration failed. Please try again.", true);
-    } finally {
-      button.disabled = false;
-      button.textContent = "Create Account";
-    }
-  });
-
-  document.getElementById("loginForm").addEventListener("submit", async function(event) {
-    event.preventDefault();
-
-    const button = document.getElementById("loginButton");
-    const email = document.getElementById("loginEmail").value.trim();
-    const password = document.getElementById("loginPassword").value;
-
-    button.disabled = true;
-    button.textContent = "Signing in...";
-    showAuthMessage("Please wait...");
-
-    try {
-      const { error } = await supabaseClient.auth.signInWithPassword({
-        email: email,
-        password: password
-      });
-
-      if (error) throw error;
-
-      showAuthMessage("Login successful! Welcome to your dashboard.");
-document.getElementById("student-welcome").textContent = "Welcome, " + email + "!";
-document.getElementById("student-email").textContent = email;
-document.getElementById("student-dashboard").classList.remove("hidden");
-      await loadStudentCourses();
-      await loadStudentCourses();
-await loadAcademyCatalogue();
-      await loadAcademyCatalogue();
-document.getElementById("student-dashboard").scrollIntoView({ behavior: "smooth" });
-    } catch (error) {
-      showAuthMessage(error.message || "Login failed. Check your email and password.", true);
-    } finally {
-      button.disabled = false;
-      button.textContent = "Log In";
-    }
-  });
-
-  document.getElementById("authModal").addEventListener("click", function(event) {
-    if (event.target === this) closeModal();
-  });
-</script>
-
-  
-<!-- GOLDEN GENERATION STUDENT DASHBOARD -->
-<section id="student-dashboard" class="hidden" style="max-width:1100px;margin:30px auto;padding:24px;font-family:Arial,sans-serif;color:#172554;">
-  <div style="background:#123b70;color:white;padding:28px;border-radius:16px;">
-    <p style="margin:0 0 8px;">GOLDEN GENERATION ONLINE ACADEMY</p>
-    <h1 style="margin:0 0 10px;">Student Dashboard</h1>
-    <p id="student-welcome" style="margin:0;">Welcome to your learning space!</p>
-  </div>
-
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:24px;">
-    <div style="padding:20px;border:1px solid #dbeafe;border-radius:12px;">
-      <h2>📚 My Courses</h2>
-      <p>Access your enrolled subjects and learning activities.</p>
-      <div id="student-courses">
-  <p>No courses are available yet. Your enrolled courses will appear here.</p>
-</div>
-    </div>
-
-    <div style="padding:20px;border:1px solid #dbeafe;border-radius:12px;">
-      <h2>🗓️ Class Schedule</h2>
-      <p>Keep track of your upcoming lessons.</p>
-      <p>Your timetable will appear here.</p>
-    </div>
-
-    <div style="padding:20px;border:1px solid #dbeafe;border-radius:12px;">
-      <h2>📖 Learning Resources</h2>
-      <p>Find study notes and learning materials.</p>
-      <p>Your resources will appear here.</p>
-    </div>
-
-    <div style="padding:20px;border:1px solid #dbeafe;border-radius:12px;">
-      <h2>📝 Assessments</h2>
-      <p>Keep track of assignments and assessments.</p>
-      <p>Your assessments will appear here.</p>
-    </div>
-
-    <div style="padding:20px;border:1px solid #dbeafe;border-radius:12px;">
-      <h2>📈 My Progress</h2>
-      <p>Monitor your learning progress and achievements.</p>
-      <p>Your progress will appear here.</p>
-    </div>
-
-    <div style="padding:20px;border:1px solid #dbeafe;border-radius:12px;">
-      <h2>👤 My Account</h2>
-      <p id="student-email">Your account details will appear here.</p>
-      <button id="student-signout" type="button"
-        style="background:#123b70;color:white;border:0;border-radius:8px;padding:12px 18px;cursor:pointer;">
-        Sign Out
-      </button>
-    </div>
-  </div>
-</section>
-<!-- END STUDENT DASHBOARD -->
-
-<script>
-async function loadAcademyCatalogue() {
-  const dashboard = document.getElementById("student-dashboard");
-  if (!dashboard) return;
-
-  const { data: categories, error: categoryError } =
-    await supabaseClient
-      .from("catalog_categories")
-      .select("id, slug, name, sort_order")
-      .order("sort_order");
-
-  if (categoryError) {
-    console.error("Could not load categories:", categoryError.message);
-    return;
-  }
-
-  let catalogue = dashboard.querySelector("#academy-catalogue");
-  if (!catalogue) {
-    catalogue = document.createElement("div");
-    catalogue.id = "academy-catalogue";
-    catalogue.style.cssText =
-      "margin-top:24px;padding:20px;border:1px solid #dbeafe;border-radius:12px;";
-    dashboard.appendChild(catalogue);
-  }
-
-  catalogue.innerHTML = "<h2>Explore Our Subjects</h2>";
-
-  for (const category of categories || []) {
-    const { data: subjects, error } = await supabaseClient
-      .from("catalog_subjects")
-      .select("name, description")
-      .eq("category_id", category.id)
-      .order("sort_order");
-
-    const section = document.createElement("section");
-    section.style.marginTop = "20px";
-
-    const heading = document.createElement("h3");
-    heading.textContent = category.name;
-    section.appendChild(heading);
-
-    if (error) {
-      const message = document.createElement("p");
-      message.textContent = "Subjects could not be loaded.";
-      section.appendChild(message);
-    } else if (!subjects || subjects.length === 0) {
-      const message = document.createElement("p");
-      message.textContent = "Subjects are being prepared.";
-      section.appendChild(message);
-    } else {
-      const list = document.createElement("ul");
-
-      for (const subject of subjects) {
-        const item = document.createElement("li");
-        item.textContent = subject.name +
-          (subject.description ? " — " + subject.description : "");
-        list.appendChild(item);
-      }
-
-      section.appendChild(list);
-    }
-
-    catalogue.appendChild(section);
+  if (!modules || modules.length === 0) {const p=document.createElement("p"); p.textContent="This course is published, but no modules have been added yet."; container.append(p); return;}
+  for (const module of modules) {
+    const lesson = document.createElement("div"); lesson.className="lesson";
+    const title = document.createElement("strong"); title.textContent = (module.position ? module.position + ". " : "") + module.title;
+    lesson.append(title);
+    container.append(lesson);
   }
 }
 
-loadAcademyCatalogue();
+$("student-signout").addEventListener("click", async () => {
+  const {error} = await supabaseClient.auth.signOut();
+  if (error) {showAuthMessage(error.message, true); return;}
+  $("student-dashboard").style.display = "none";
+  openModal("login");
+  showAuthMessage("You have signed out.");
+});
 </script>
-
 </body>
 </html>
