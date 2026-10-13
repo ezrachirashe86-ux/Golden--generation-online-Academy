@@ -582,6 +582,8 @@ document.getElementById("student-welcome").textContent = "Welcome, " + email + "
 document.getElementById("student-email").textContent = email;
 document.getElementById("student-dashboard").classList.remove("hidden");
       await loadStudentCourses();
+      await loadStudentCourses();
+await loadAcademyCatalogue();
       await loadAcademyCatalogue();
 document.getElementById("student-dashboard").scrollIntoView({ behavior: "smooth" });
     } catch (error) {
