@@ -363,7 +363,7 @@ async function loadAcademyCatalogue() {
     catalogue.appendChild(section);
   }
 }
-
+async function loadStudentCourses() {
   const container = $("student-courses");
   container.textContent = "Loading published courses...";
   const {data:courses, error} = await supabaseClient.from("courses")
