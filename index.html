@@ -37,6 +37,25 @@
     .small-button{padding:8px 12px;font-size:14px}.muted{color:#64748b}.notice{padding:12px;border-radius:8px;background:#eff6ff;color:#1e3a8a}
     .course-panel{margin-top:20px;padding:18px;border:1px solid var(--border);border-radius:12px}.lesson{padding:12px;border:1px solid #e6ebf2;border-radius:8px;margin-top:10px}
     @media(max-width:760px){header{justify-content:center}nav{justify-content:center}.hero{grid-template-columns:1fr;padding:45px 6%}.cards{grid-template-columns:1fr}.about-grid{grid-template-columns:1fr}section.content{padding:38px 6%}#student-dashboard{padding:14px}}
+    /* Mobile-friendly subject catalogue */
+.subject-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.subject-item {
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
   </style>
 </head>
 <body>
