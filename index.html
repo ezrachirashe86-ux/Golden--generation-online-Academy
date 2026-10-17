@@ -143,7 +143,13 @@ body.student-workspace #student-dashboard {
     <div class="dashboard-card"><h2>📚 Published Courses</h2><p class="muted">Courses with lessons appear here.</p><div id="student-courses">Sign in to load your courses.</div></div>
     <div class="dashboard-card"><h2>🗓️ Class Schedule</h2><p>Your timetable will appear here when classes are scheduled.</p></div>
     <div class="dashboard-card"><h2>📖 Learning Resources</h2><p>Your learning resources will appear here.</p></div>
-    <div class="dashboard-card"><h2>📝 Assessments</h2><p>Your assignments and assessments will appear here.</p></div>
+    
+<div class="dashboard-card">
+  <h2>📝 Assessments</h2>
+  <p>View your assignments and available assessments.</p>
+  <button type="button" class="secondary small-button" onclick="openStudentPanel('assessments')">Open Assessments</button>
+</div>
+
     <div class="dashboard-card"><h2>📈 My Progress</h2><p>Your learning progress will appear here.</p></div>
     <div class="dashboard-card"><h2>👤 My Account</h2><p id="student-email"></p><button id="student-signout" type="button" class="secondary">Sign Out</button></div>
   </div>
