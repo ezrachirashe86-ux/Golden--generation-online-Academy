@@ -456,6 +456,8 @@ async function findSubjectCourse(subject) {
     .select("id, title, description, price, published").eq("published", true).order("title");
   if (error) {message.textContent = "Could not search courses: " + error.message; return;}
   const needle = subject.name.trim().toLowerCase();
+const subjectWords = needle.split(/\s+/).filter(word => word.length > 2);
+const normalize = value => (value || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
   const matches = (courses || []).filter(course => (course.title || "").toLowerCase().includes(needle) || needle.includes((course.title || "").toLowerCase()));
   detail.replaceChildren(heading);
   if (!matches.length) {
