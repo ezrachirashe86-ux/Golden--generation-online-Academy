@@ -224,6 +224,37 @@ $("student-dashboard").style.display = "block";
   $("student-dashboard").scrollIntoView({behavior:"smooth"});
   await Promise.allSettled([loadStudentCourses(), loadAcademyCatalogue()]);
 }
+  
+function openStudentPanel(panel) {
+  const detail = $("course-detail");
+  detail.hidden = false;
+  detail.replaceChildren();
+
+  const heading = document.createElement("h2");
+  heading.textContent = panel === "assessments"
+    ? "📝 Assessments"
+    : "📈 My Progress";
+  detail.appendChild(heading);
+
+  const message = document.createElement("p");
+  message.textContent = panel === "assessments"
+    ? "Your assessments will appear here when they are made available by your academy."
+    : "Your learning progress will appear here as your courses and assessment results are recorded.";
+  detail.appendChild(message);
+
+  const closeButton = document.createElement("button");
+  closeButton.type = "button";
+  closeButton.className = "secondary small-button";
+  closeButton.textContent = "Close";
+  closeButton.addEventListener("click", () => {
+    detail.hidden = true;
+    detail.replaceChildren();
+  });
+  detail.appendChild(closeButton);
+
+  detail.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 
 
 async function loadAcademyCatalogue() {
