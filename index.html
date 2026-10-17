@@ -212,7 +212,8 @@ $("loginForm").addEventListener("submit", async (event) => {
 async function showDashboard(email) {
   $("student-welcome").textContent = "Welcome, " + email + "!";
   $("student-email").textContent = email;
-  $("student-dashboard").style.display = "block";
+  document.body.classList.add("student-workspace");
+$("student-dashboard").style.display = "block";
   closeModal();
   $("student-dashboard").scrollIntoView({behavior:"smooth"});
   await Promise.allSettled([loadStudentCourses(), loadAcademyCatalogue()]);
