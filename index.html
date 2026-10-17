@@ -384,15 +384,7 @@ async function loadStudentCourses() {
   }
 }
 
-async function loadAcademyCatalogue() {
 
-      const description = document.createElement("p"); description.textContent = subject.description || "Explore this subject.";
-      const button = document.createElement("button"); button.type="button"; button.className="secondary small-button"; button.textContent="Find Course";
-      button.addEventListener("click", () => findSubjectCourse(subject));
-      item.append(title, description, button); list.append(item);
-    }
-  }
-}
 
 async function findSubjectCourse(subject) {
   const detail = $("course-detail"); detail.hidden = false; detail.innerHTML = "";
