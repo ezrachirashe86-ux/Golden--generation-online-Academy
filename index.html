@@ -385,24 +385,7 @@ async function loadStudentCourses() {
 }
 
 async function loadAcademyCatalogue() {
-  const catalogue = $("academy-catalogue");
-  catalogue.innerHTML = "<h2>Explore Our Subjects</h2><p>Loading categories and subjects...</p>";
-  const {data:categories, error} = await supabaseClient.from("catalog_categories")
-    .select("id, slug, name, sort_order").order("sort_order");
-  if (error) {catalogue.innerHTML = ""; const msg = document.createElement("p"); msg.className="notice"; msg.textContent = "Could not load subject categories: " + error.message; catalogue.append(msg); return;}
-  catalogue.innerHTML = "<h2>Explore Our Subjects</h2><p class='muted'>Choose a subject to look for a matching published course. A subject listing is not itself a lesson/course.</p>";
-  if (!categories || categories.length === 0) {catalogue.append("No categories are available yet."); return;}
-  for (const category of categories) {
-    const section = document.createElement("section"); section.className = "category"; section.style.padding = "12px 0";
-    const heading = document.createElement("h3"); heading.textContent = category.name; section.append(heading);
-    const list = document.createElement("ul"); list.className = "subject-list"; section.append(list); catalogue.append(section);
-    const {data:subjects, error:subjectError} = await supabaseClient.from("catalog_subjects")
-      .select("id, name, description, sort_order").eq("category_id", category.id).order("sort_order");
-    if (subjectError) {const message=document.createElement("p"); message.textContent="Could not load subjects: "+subjectError.message; section.append(message); continue;}
-    if (!subjects || subjects.length === 0) {const message=document.createElement("p"); message.textContent="Subjects are being prepared."; section.append(message); continue;}
-    for (const subject of subjects) {
-      const item = document.createElement("li"); item.className = "subject-item";
-      const title = document.createElement("strong"); title.textContent = subject.name;
+
       const description = document.createElement("p"); description.textContent = subject.description || "Explore this subject.";
       const button = document.createElement("button"); button.type="button"; button.className="secondary small-button"; button.textContent="Find Course";
       button.addEventListener("click", () => findSubjectCourse(subject));
