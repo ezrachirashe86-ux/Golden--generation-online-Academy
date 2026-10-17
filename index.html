@@ -458,7 +458,14 @@ async function findSubjectCourse(subject) {
   const needle = subject.name.trim().toLowerCase();
 const subjectWords = needle.split(/\s+/).filter(word => word.length > 2);
 const normalize = value => (value || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
-  const matches = (courses || []).filter(course => (course.title || "").toLowerCase().includes(needle) || needle.includes((course.title || "").toLowerCase()));
+  
+const matches = (courses || []).filter(course => {
+  const title = normalize(course.title);
+  return title.includes(normalize(subject.name)) ||
+    normalize(subject.name).includes(title) ||
+    subjectWords.some(word => title.split(" ").includes(word));
+});
+
   detail.replaceChildren(heading);
   if (!matches.length) {
     const p = document.createElement("p"); p.textContent = "This subject is listed in the catalogue, but there is no published course with a matching title in the courses table yet. To provide lessons for it, a course record and its modules/lessons must be added in Supabase."; detail.append(p); return;
