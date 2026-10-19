@@ -550,6 +550,646 @@ $("student-signout").addEventListener("click", async () => {
   openModal("login");
   showAuthMessage("You have signed out.");
 });
+  /*
+GOLDEN GENERATION ONLINE ACADEMY — TUTOR DASHBOARD ADD-ON
+Installation: paste this entire block immediately BEFORE the final </script>
+tag in index.html. Do not delete or replace existing code.
+*/
+(() => {
+  "use strict";
+
+  const tutorStyle = document.createElement("style");
+  tutorStyle.textContent = `
+    #gga-tutor-workspace{display:none;max-width:1100px;margin:0 auto;padding:22px 14px;min-height:100vh;background:#f4f6fa;color:#142c4e}
+    #gga-tutor-workspace .gga-banner{background:#123b70;color:#fff;border-radius:14px;padding:22px}
+    #gga-tutor-workspace .gga-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:18px 0}
+    #gga-tutor-workspace .gga-card{background:#fff;border:1px solid #dbe5f0;border-radius:12px;padding:16px;min-width:0}
+    #gga-tutor-workspace input,#gga-tutor-workspace textarea,#gga-tutor-workspace select{width:100%;box-sizing:border-box;padding:10px;margin:5px 0 10px;border:1px solid #cbd5e1;border-radius:7px;font:inherit}
+    #gga-tutor-workspace textarea{min-height:78px}
+    #gga-tutor-workspace label{font-weight:700;display:block}
+    #gga-tutor-workspace .gga-item{border:1px solid #e2e8f0;border-radius:9px;padding:12px;margin:10px 0;background:#fff;overflow-wrap:anywhere}
+    #gga-tutor-workspace .gga-status{padding:10px;border-radius:8px;background:#eff6ff;color:#1e3a8a;overflow-wrap:anywhere}
+    #gga-tutor-workspace .gga-danger{background:#fff1f2;color:#9f1239}
+    #gga-tutor-workspace button{margin:4px 4px 4px 0}
+    @media(max-width:520px){#gga-tutor-workspace{padding:12px 8px}}
+  `;
+  document.head.appendChild(tutorStyle);
+
+  const tutorWorkspace = document.createElement("section");
+  tutorWorkspace.id = "gga-tutor-workspace";
+  tutorWorkspace.innerHTML = `
+    <div class="gga-banner">
+      <p style="margin:0">GOLDEN GENERATION ONLINE ACADEMY</p>
+      <h1 style="margin:4px 0">Tutor Dashboard</h1>
+      <p id="gga-tutor-welcome" style="margin:0">Welcome to your teaching workspace.</p>
+      <button id="gga-tutor-signout" class="primary" type="button" style="margin-top:14px">Sign Out</button>
+    </div>
+    <div id="gga-tutor-notice" class="gga-status" role="status" aria-live="polite" style="margin-top:14px">Loading your teaching workspace…</div>
+    <div class="gga-grid">
+      <div class="gga-card"><h2>My Assigned Courses</h2><p class="muted">Only courses assigned to your approved tutor account appear here.</p><div id="gga-tutor-courses"></div></div>
+      <div class="gga-card"><h2>Schedule a Class</h2>
+        <form id="gga-class-form">
+          <label for="gga-class-course">Assigned course</label><select id="gga-class-course" required><option value="">Choose a course</option></select>
+          <label for="gga-class-title">Class title</label><input id="gga-class-title" required maxlength="160" placeholder="e.g. Algebra revision">
+          <label for="gga-class-start">Start date and time</label><input id="gga-class-start" type="datetime-local" required>
+          <label for="gga-class-end">End date and time</label><input id="gga-class-end" type="datetime-local" required>
+          <label for="gga-class-url">Meeting link (optional)</label><input id="gga-class-url" type="url" placeholder="https://…">
+          <label for="gga-class-notes">Notes (optional)</label><textarea id="gga-class-notes"></textarea>
+          <button class="secondary" type="submit">Schedule Class</button>
+        </form>
+        <div id="gga-tutor-sessions"></div>
+      </div>
+    </div>
+    <div class="gga-grid">
+      <div class="gga-card"><h2>Course Content</h2>
+        <form id="gga-module-form">
+          <label for="gga-module-course">Assigned course</label><select id="gga-module-course" required><option value="">Choose a course</option></select>
+          <label for="gga-module-title">New module title</label><input id="gga-module-title" required maxlength="160">
+          <label for="gga-module-position">Module order</label><input id="gga-module-position" type="number" min="1" value="1" required>
+          <button class="secondary" type="submit">Add Module</button>
+        </form>
+        <form id="gga-lesson-form">
+          <label for="gga-lesson-module">Module</label><select id="gga-lesson-module" required><option value="">Choose a module</option></select>
+          <label for="gga-lesson-title">Lesson title</label><input id="gga-lesson-title" required maxlength="160">
+          <label for="gga-lesson-content">Lesson content</label><textarea id="gga-lesson-content" placeholder="Learning notes or instructions"></textarea>
+          <label for="gga-lesson-video">Video link (optional)</label><input id="gga-lesson-video" type="url" placeholder="https://…">
+          <label for="gga-lesson-position">Lesson order</label><input id="gga-lesson-position" type="number" min="1" value="1" required>
+          <button class="secondary" type="submit">Add Lesson</button>
+        </form>
+        <div id="gga-tutor-modules"></div>
+      </div>
+      <div class="gga-card"><h2>Assessments</h2>
+        <form id="gga-assessment-form">
+          <label for="gga-assessment-course">Assigned course</label><select id="gga-assessment-course" required><option value="">Choose a course</option></select>
+          <label for="gga-assessment-title">Assessment title</label><input id="gga-assessment-title" required maxlength="160">
+          <label for="gga-assessment-description">Instructions</label><textarea id="gga-assessment-description"></textarea>
+          <button class="secondary" type="submit">Create Assessment</button>
+        </form>
+        <div id="gga-tutor-assessments"></div>
+      </div>
+    </div>
+    <div class="gga-card"><h2>Student Submissions & Marking</h2><p class="muted">Submissions are shown only for assessments attached to courses assigned to you.</p><div id="gga-tutor-submissions">Choose an assigned course to load its assessments and submissions.</div></div>
+    <div class="gga-card" style="margin-top:16px"><h2>Students in My Courses</h2><div id="gga-tutor-students"></div></div>
+  `;
+  document.body.appendChild(tutorWorkspace);
+
+  const tutor = {
+    user: null,
+    courses: [],
+    modules: [],
+    assessments: [],
+    el(id) { return document.getElementById(id); },
+    notice(message, error = false) {
+      const n = this.el("gga-tutor-notice");
+      n.textContent = message;
+      n.className = error ? "gga-status gga-danger" : "gga-status";
+    },
+    node(tag, text, className) {
+      const n = document.createElement(tag);
+      if (text !== undefined && text !== null) n.textContent = text;
+      if (className) n.className = className;
+      return n;
+    },
+    async profile() {
+      const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+      if (userError) throw userError;
+      if (!user) return null;
+      const { data, error } = await supabaseClient.from("profiles")
+        .select("id, full_name, role, approval_status").eq("id", user.id).maybeSingle();
+      if (error) throw error;
+      return { user, profile: data };
+    },
+    async handleLogin(event) {
+      // Capture-phase handler prevents the older student-only handler from
+      // racing this role-aware sign-in handler.
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      const button = this.el("loginButton");
+      const email = this.el("loginEmail").value.trim();
+      const password = this.el("loginPassword").value;
+      button.disabled = true;
+      button.textContent = "Signing in…";
+      showAuthMessage("Checking your account…");
+      try {
+        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        const result = await this.profile();
+        if (!result) throw new Error("Could not identify the signed-in account.");
+        const { user, profile } = result;
+        const accountType = user.user_metadata?.account_type;
+        if (profile?.role === "tutor" && profile?.approval_status === "approved") {
+          closeModal();
+          document.body.classList.remove("student-workspace");
+          $("student-dashboard").style.display = "none";
+          document.querySelector("body > header")?.style.setProperty("display", "none");
+          document.querySelector("body > main")?.style.setProperty("display", "none");
+          document.querySelector("body > footer")?.style.setProperty("display", "none");
+          this.el("gga-tutor-workspace").style.display = "block";
+          this.el("gga-tutor-welcome").textContent = "Welcome, " + (profile.full_name || user.email || "Tutor") + ".";
+          await this.loadWorkspace();
+        } else if (accountType === "tutor") {
+          closeModal();
+          this.showApplicationForm(user, profile);
+        } else {
+          showAuthMessage("Login successful. Welcome to your dashboard.");
+          await showDashboard(email);
+        }
+      } catch (error) {
+        showAuthMessage(error.message || "Login failed. Please try again.", true);
+      } finally {
+        button.disabled = false;
+        button.textContent = "Log In";
+      }
+    },
+    showApplicationForm(user, profile) {
+      document.body.classList.remove("student-workspace");
+      $("student-dashboard").style.display = "none";
+      document.querySelector("body > header")?.style.removeProperty("display");
+      document.querySelector("body > main")?.style.removeProperty("display");
+      document.querySelector("body > footer")?.style.removeProperty("display");
+      this.el("gga-tutor-workspace").style.display = "none";
+      let box = this.el("gga-application-box");
+      if (!box) {
+        box = this.node("section");
+        box.id = "gga-application-box";
+        box.style.cssText = "max-width:680px;margin:24px auto;padding:20px;border:1px solid #dbe5f0;border-radius:14px;background:#fff";
+        box.innerHTML = `
+          <h2>Tutor Application</h2>
+          <p>Submit your teaching details for review. Tutor tools remain locked until your application is approved and courses are assigned.</p>
+          <form id="gga-application-form">
+            <label for="gga-app-name">Full name</label><input id="gga-app-name" required maxlength="160">
+            <label for="gga-app-qualifications">Qualifications</label><textarea id="gga-app-qualifications" required maxlength="3000"></textarea>
+            <label for="gga-app-subjects">Subjects you can teach</label><textarea id="gga-app-subjects" required maxlength="2000"></textarea>
+            <label for="gga-app-experience">Teaching experience</label><textarea id="gga-app-experience" required maxlength="3000"></textarea>
+            <button class="secondary" type="submit">Submit Application</button>
+            <button id="gga-app-signout" type="button">Sign Out</button>
+          </form>
+          <p id="gga-app-message" role="status" aria-live="polite"></p>`;
+        document.body.insertBefore(box, document.body.firstChild);
+        box.querySelector("#gga-application-form").addEventListener("submit", async e => {
+          e.preventDefault();
+          const submit = e.submitter;
+          if (submit) submit.disabled = true;
+          const message = box.querySelector("#gga-app-message");
+          message.textContent = "Submitting application…";
+          try {
+            const { data: existing, error: lookupError } = await supabaseClient
+              .from("tutor_applications").select("id,status").eq("user_id", user.id).maybeSingle();
+            if (lookupError) throw lookupError;
+            if (existing) {
+              message.textContent = "Your application is already recorded. Current status: " + existing.status + ". An administrator must review it.";
+              return;
+            }
+            const { error } = await supabaseClient.from("tutor_applications").insert({
+              user_id: user.id,
+              full_name: box.querySelector("#gga-app-name").value.trim(),
+              qualifications: box.querySelector("#gga-app-qualifications").value.trim(),
+              subjects: box.querySelector("#gga-app-subjects").value.trim(),
+              experience: box.querySelector("#gga-app-experience").value.trim(),
+              status: "pending"
+            });
+            if (error) throw error;
+            message.textContent = "Application submitted successfully. It is pending review; you cannot use tutor tools until approved.";
+          } catch (err) {
+            message.textContent = err.message || "Could not submit application.";
+          } finally {
+            if (submit) submit.disabled = false;
+          }
+        });
+        box.querySelector("#gga-app-signout").addEventListener("click", async () => {
+          await supabaseClient.auth.signOut();
+          box.remove();
+          openModal("login");
+        });
+      }
+      box.style.display = "block";
+      box.querySelector("#gga-app-name").value = profile?.full_name || user.user_metadata?.full_name || "";
+      box.scrollIntoView({ behavior: "smooth" });
+      (async () => {
+        try {
+          const { data, error } = await supabaseClient.from("tutor_applications")
+            .select("id,status").eq("user_id", user.id).maybeSingle();
+          if (error) throw error;
+          if (data) box.querySelector("#gga-app-message").textContent =
+            "Your application status is: " + data.status + ".";
+        } catch (err) {
+          box.querySelector("#gga-app-message").textContent = err.message || "";
+        }
+      })();
+    },
+    addOption(select, value, label) {
+      const opt = document.createElement("option");
+      opt.value = String(value);
+      opt.textContent = label;
+      select.appendChild(opt);
+    },
+    fillCourseSelects() {
+      ["gga-class-course", "gga-module-course", "gga-assessment-course"].forEach(id => {
+        const select = this.el(id);
+        select.replaceChildren();
+        this.addOption(select, "", "Choose a course");
+        this.courses.forEach(c => this.addOption(select, c.id, c.title));
+      });
+    },
+    async loadWorkspace() {
+      this.notice("Loading assigned courses…");
+      const { data: assignments, error } = await supabaseClient
+        .from("tutor_course_assignments").select("course_id").eq("tutor_id", this.user.id);
+      if (error) throw error;
+      const ids = (assignments || []).map(a => a.course_id);
+      this.courses = [];
+      if (ids.length) {
+        const { data: courses, error: courseError } = await supabaseClient.from("courses")
+          .select("id,title,description,published").in("id", ids).order("title");
+        if (courseError) throw courseError;
+        this.courses = courses || [];
+      }
+      this.fillCourseSelects();
+      const list = this.el("gga-tutor-courses");
+      list.replaceChildren();
+      if (!this.courses.length) list.append(this.node("p", "No courses have been assigned to this tutor account yet."));
+      this.courses.forEach(course => {
+        const item = this.node("div", null, "gga-item");
+        item.append(this.node("strong", course.title));
+        item.append(this.node("p", course.description || "No course description."));
+        item.append(this.node("p", course.published ? "Published" : "Unpublished"));
+        const selectBtn = this.node("button", "Load course tools", "secondary");
+        selectBtn.type = "button";
+        selectBtn.addEventListener("click", () => this.loadCourseDetails(course.id));
+        item.append(selectBtn);
+        list.append(item);
+      });
+      await this.loadSessions();
+      await this.loadStudents();
+      this.notice(this.courses.length
+        ? "Tutor workspace loaded. Select an assigned course to manage its content and assessments."
+        : "Your account is approved, but no courses are assigned yet. Ask an administrator to assign a course.");
+    },
+    async loadCourseDetails(courseId) {
+      this.el("gga-module-course").value = String(courseId);
+      this.el("gga-assessment-course").value = String(courseId);
+      this.el("gga-class-course").value = String(courseId);
+      this.el("gga-tutor-submissions").textContent = "Loading course assessments…";
+      try {
+        const { data: modules, error: moduleError } = await supabaseClient.from("modules")
+          .select("id,course_id,title,position").eq("course_id", courseId).order("position");
+        if (moduleError) throw moduleError;
+        this.modules = modules || [];
+        const moduleSelect = this.el("gga-lesson-module");
+        moduleSelect.replaceChildren();
+        this.addOption(moduleSelect, "", "Choose a module");
+        this.modules.forEach(m => this.addOption(moduleSelect, m.id, m.title));
+        const moduleList = this.el("gga-tutor-modules");
+        moduleList.replaceChildren();
+        if (!this.modules.length) moduleList.append(this.node("p", "No modules yet. Use the form above to add one."));
+        for (const m of this.modules) {
+          const item = this.node("div", null, "gga-item");
+          item.append(this.node("strong", (m.position || "") + " " + m.title));
+          const { data: lessons, error: lessonError } = await supabaseClient.from("lessons")
+            .select("id,title,position,content,video_url").eq("module_id", m.id).order("position");
+          if (lessonError) item.append(this.node("p", "Could not load lessons: " + lessonError.message));
+          else if (!lessons?.length) item.append(this.node("p", "No lessons in this module yet."));
+          else lessons.forEach(l => {
+            item.append(this.node("p", "Lesson " + (l.position || "") + ": " + l.title));
+            if (l.content) item.append(this.node("p", l.content));
+            if (l.video_url) {
+              try {
+                const u = new URL(l.video_url);
+                if (u.protocol === "https:" || u.protocol === "http:") {
+                  const a = this.node("a", "Open lesson video");
+                  a.href = u.href; a.target = "_blank"; a.rel = "noopener noreferrer";
+                  item.append(a);
+                }
+              } catch (_) {}
+            }
+          });
+          moduleList.append(item);
+        }
+        const { data: assessments, error: assessmentError } = await supabaseClient.from("assessments")
+          .select("id,course_id,title,description,created_at").eq("course_id", courseId).order("created_at");
+        if (assessmentError) throw assessmentError;
+        this.assessments = assessments || [];
+        const assessmentList = this.el("gga-tutor-assessments");
+        assessmentList.replaceChildren();
+        if (!this.assessments.length) assessmentList.append(this.node("p", "No assessments yet. Use the form above to create one."));
+        for (const a of this.assessments) {
+          const item = this.node("div", null, "gga-item");
+          item.append(this.node("strong", a.title));
+          item.append(this.node("p", a.description || "No instructions provided."));
+          const submissionsButton = this.node("button", "View submissions", "secondary");
+          submissionsButton.type = "button";
+          submissionsButton.addEventListener("click", () => this.loadSubmissions(a));
+          item.append(submissionsButton);
+          assessmentList.append(item);
+        }
+        this.el("gga-tutor-submissions").textContent = "Course loaded. Select View submissions under an assessment.";
+        this.notice("Loaded course: " + (this.courses.find(c => String(c.id) === String(courseId))?.title || courseId));
+      } catch (err) {
+        this.notice(err.message || "Could not load course tools.", true);
+      }
+    },
+    async loadSubmissions(assessment) {
+      const box = this.el("gga-tutor-submissions");
+      box.replaceChildren(this.node("p", "Loading submissions for: " + assessment.title));
+      try {
+        const { data: submissions, error } = await supabaseClient.from("assessment_submissions")
+          .select("assessment_id,student_id,submission_text,submitted_at,score,feedback,marked_at")
+          .eq("assessment_id", assessment.id).order("submitted_at", { ascending: false });
+        if (error) throw error;
+        box.replaceChildren(this.node("h3", assessment.title));
+        if (!submissions?.length) {
+          box.append(this.node("p", "No student submissions have been received yet."));
+          return;
+        }
+        for (const sub of submissions) {
+          const item = this.node("div", null, "gga-item");
+          item.append(this.node("strong", "Student ID: " + sub.student_id));
+          item.append(this.node("p", "Submitted: " + (sub.submitted_at || "Date unavailable")));
+          item.append(this.node("p", sub.submission_text || "(No written response supplied)"));
+          const scoreLabel = this.node("label", "Score");
+          const score = document.createElement("input");
+          score.type = "number"; score.min = "0"; score.step = "0.01";
+          score.value = sub.score ?? ""; score.placeholder = "Enter score";
+          const feedbackLabel = this.node("label", "Feedback");
+          const feedback = document.createElement("textarea");
+          feedback.value = sub.feedback || "";
+          const save = this.node("button", "Save Mark & Feedback", "secondary");
+          save.type = "button";
+          save.addEventListener("click", async () => {
+            if (score.value.trim() === "" || Number(score.value) < 0) {
+              this.notice("Enter a valid score of zero or greater.", true); return;
+            }
+            save.disabled = true;
+            try {
+              const { error: updateError } = await supabaseClient.from("assessment_submissions")
+                .update({ score: Number(score.value), feedback: feedback.value.trim(),
+                  marked_by: this.user.id, marked_at: new Date().toISOString() })
+                .eq("assessment_id", assessment.id).eq("student_id", sub.student_id);
+              if (updateError) throw updateError;
+              this.notice("Mark and feedback saved.");
+              sub.score = Number(score.value); sub.feedback = feedback.value.trim();
+            } catch (err) {
+              this.notice(err.message || "Could not save the mark. Check your permissions.", true);
+            } finally { save.disabled = false; }
+          });
+          item.append(scoreLabel, score, feedbackLabel, feedback, save);
+          box.append(item);
+        }
+      } catch (err) {
+        box.replaceChildren(this.node("p", "Could not load submissions: " + (err.message || "Unknown error"), "gga-status gga-danger"));
+      }
+    },
+    async loadStudents() {
+      const box = this.el("gga-tutor-students");
+      box.textContent = "Loading students in assigned courses…";
+      try {
+        if (!this.courses.length) { box.textContent = "Students will appear after courses are assigned and students are enrolled."; return; }
+        const ids = this.courses.map(c => c.id);
+        const { data: enrollments, error } = await supabaseClient.from("enrollments")
+          .select("student_id,course_id").in("course_id", ids);
+        if (error) throw error;
+        if (!enrollments?.length) { box.textContent = "No students are enrolled in your assigned courses yet."; return; }
+        const studentIds = [...new Set(enrollments.map(e => e.student_id))];
+        const { data: profiles, error: profileError } = await supabaseClient.from("profiles")
+          .select("id,full_name").in("id", studentIds);
+        if (profileError) throw profileError;
+        box.replaceChildren();
+        (profiles || []).forEach(p => {
+          const courseNames = enrollments.filter(e => e.student_id === p.id)
+            .map(e => this.courses.find(c => String(c.id) === String(e.course_id))?.title)
+            .filter(Boolean);
+          box.append(this.node("div", (p.full_name || "Student") + " — " + courseNames.join(", "), "gga-item"));
+        });
+      } catch (err) {
+        box.textContent = "Could not load student list: " + (err.message || "Check tutor permissions.");
+      }
+    },
+    async loadSessions() {
+      const box = this.el("gga-tutor-sessions");
+      box.textContent = "Loading scheduled classes…";
+      try {
+        if (!this.courses.length) { box.textContent = "Assign courses before scheduling classes."; return; }
+        const { data, error } = await supabaseClient.from("tutor_class_sessions")
+          .select("id,course_id,title,starts_at,ends_at,meeting_url,notes")
+          .eq("tutor_id", this.user.id).order("starts_at");
+        if (error) throw error;
+        box.replaceChildren(this.node("h3", "My Scheduled Classes"));
+        if (!data?.length) { box.append(this.node("p", "No classes scheduled yet.")); return; }
+        data.forEach(s => {
+          const item = this.node("div", null, "gga-item");
+          const course = this.courses.find(c => String(c.id) === String(s.course_id));
+          item.append(this.node("strong", s.title + " — " + (course?.title || "Course")));
+          item.append(this.node("p", new Date(s.starts_at).toLocaleString() + " to " + new Date(s.ends_at).toLocaleString()));
+          if (s.notes) item.append(this.node("p", s.notes));
+          if (s.meeting_url) {
+            try {
+              const u = new URL(s.meeting_url);
+              if (u.protocol === "https:" || u.protocol === "http:") {
+                const a = this.node("a", "Open meeting link"); a.href = u.href; a.target = "_blank"; a.rel = "noopener noreferrer"; item.append(a);
+              }
+            } catch (_) {}
+          }
+          box.append(item);
+        });
+      } catch (err) { box.textContent = "Could not load class schedule: " + (err.message || "Unknown error"); }
+    },
+    async submitForm(formId, handler) {
+      this.el(formId).addEventListener("submit", async e => {
+        e.preventDefault();
+        const button = e.submitter || e.currentTarget.querySelector('button[type="submit"]');
+        if (button) button.disabled = true;
+        try { await handler(); }
+        catch (err) { this.notice(err.message || "Action failed. Check your permissions.", true); }
+        finally { if (button) button.disabled = false; }
+      });
+    },
+    initForms() {
+      this.submitForm("gga-module-form", async () => {
+        const courseId = Number(this.el("gga-module-course").value);
+        const { error } = await supabaseClient.from("modules").insert({
+          course_id: courseId,
+          title: this.el("gga-module-title").value.trim(),
+          position: Number(this.el("gga-module-position").value)
+        });
+        if (error) throw error;
+        this.el("gga-module-title").value = "";
+        await this.loadCourseDetails(courseId);
+        this.notice("Module added.");
+      });
+      this.submitForm("gga-lesson-form", async () => {
+        const moduleId = Number(this.el("gga-lesson-module").value);
+        const { error } = await supabaseClient.from("lessons").insert({
+          module_id: moduleId,
+          title: this.el("gga-lesson-title").value.trim(),
+          content: this.el("gga-lesson-content").value.trim() || null,
+          video_url: this.el("gga-lesson-video").value.trim() || null,
+          position: Number(this.el("gga-lesson-position").value)
+        });
+        if (error) throw error;
+        const module = this.modules.find(m => String(m.id) === String(moduleId));
+        this.el("gga-lesson-title").value = "";
+        this.el("gga-lesson-content").value = "";
+        this.el("gga-lesson-video").value = "";
+        if (module) await this.loadCourseDetails(module.course_id);
+        this.notice("Lesson added.");
+      });
+      this.submitForm("gga-assessment-form", async () => {
+        const courseId = Number(this.el("gga-assessment-course").value);
+        const { error } = await supabaseClient.from("assessments").insert({
+          course_id: courseId,
+          title: this.el("gga-assessment-title").value.trim(),
+          description: this.el("gga-assessment-description").value.trim() || null
+        });
+        if (error) throw error;
+        this.el("gga-assessment-title").value = "";
+        this.el("gga-assessment-description").value = "";
+        await this.loadCourseDetails(courseId);
+        this.notice("Assessment created.");
+      });
+      this.submitForm("gga-class-form", async () => {
+        const courseId = Number(this.el("gga-class-course").value);
+        const start = new Date(this.el("gga-class-start").value);
+        const end = new Date(this.el("gga-class-end").value);
+        if (!(start instanceof Date) || !(end instanceof Date) || isNaN(start) || isNaN(end) || end <= start) {
+          throw new Error("The class end time must be after its start time.");
+        }
+        const meeting = this.el("gga-class-url").value.trim();
+        if (meeting && !/^https?:\/\//i.test(meeting)) throw new Error("Use a valid http or https meeting link.");
+        const { error } = await supabaseClient.from("tutor_class_sessions").insert({
+          tutor_id: this.user.id, course_id: courseId,
+          title: this.el("gga-class-title").value.trim(),
+          starts_at: start.toISOString(), ends_at: end.toISOString(),
+          meeting_url: meeting || null,
+          notes: this.el("gga-class-notes").value.trim() || null
+        });
+        if (error) throw error;
+        this.el("gga-class-title").value = "";
+        this.el("gga-class-start").value = "";
+        this.el("gga-class-end").value = "";
+        this.el("gga-class-url").value = "";
+        this.el("gga-class-notes").value = "";
+        await this.loadSessions();
+        this.notice("Class scheduled.");
+      });
+    }
+  };
+
+  // Add tutor entry points without replacing the existing student controls.
+  const nav = document.querySelector("header nav");
+  if (nav && !document.getElementById("gga-tutor-apply-button")) {
+    const apply = document.createElement("button");
+    apply.id = "gga-tutor-apply-button";
+    apply.type = "button";
+    apply.className = "secondary";
+    apply.textContent = "Become a Tutor";
+    apply.addEventListener("click", async () => {
+      try {
+        const result = await tutor.profile();
+        if (!result) {
+          openModal("register");
+          showAuthMessage("Create an account first, then sign in and choose Become a Tutor.");
+          return;
+        }
+        tutor.showApplicationForm(result.user, result.profile);
+      } catch (err) { alert(err.message || "Could not check your account."); }
+    });
+    nav.appendChild(apply);
+
+    const login = document.createElement("button");
+    login.id = "gga-tutor-login-button";
+    login.type = "button";
+    login.className = "secondary";
+    login.textContent = "Tutor Login";
+    login.addEventListener("click", () => openModal("login"));
+    nav.appendChild(login);
+  }
+
+  // A tutor account can be created using the existing registration form by
+  // setting the account type before submission; the normal student flow remains default.
+  const registerPanel = document.getElementById("registerPanel");
+  if (registerPanel && !document.getElementById("gga-register-as-tutor")) {
+    const tutorChoice = document.createElement("label");
+    tutorChoice.style.cssText = "display:flex;gap:8px;align-items:center;margin:10px 0;font-weight:normal";
+    tutorChoice.innerHTML = '<input id="gga-register-as-tutor" type="checkbox" style="width:auto"> I am registering to apply as a tutor';
+    const form = document.getElementById("registerForm");
+    const submit = document.getElementById("registerButton");
+    form.insertBefore(tutorChoice, submit);
+    const oldRegisterHandler = form; // keep the existing form and its fields unchanged
+    form.addEventListener("submit", async (event) => {
+      if (!document.getElementById("gga-register-as-tutor").checked) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      const button = document.getElementById("registerButton");
+      const name = document.getElementById("fullName").value.trim();
+      const email = document.getElementById("registerEmail").value.trim();
+      const password = document.getElementById("registerPassword").value;
+      if (!name || !email || password.length < 6) {
+        showAuthMessage("Enter your name, a valid email and a password of at least 6 characters.", true);
+        return;
+      }
+      button.disabled = true; button.textContent = "Creating tutor account…";
+      try {
+        const { data, error } = await supabaseClient.auth.signUp({
+          email, password,
+          options: { data: { full_name: name, account_type: "tutor" } }
+        });
+        if (error) throw error;
+        if (data.session) {
+          closeModal();
+          const result = await tutor.profile();
+          tutor.showApplicationForm(result.user, result.profile);
+        } else {
+          showAuthMessage("Tutor account created. Confirm your email, then log in and submit your tutor application. Tutor access remains locked until approval.");
+        }
+      } catch (err) {
+        showAuthMessage(err.message || "Could not create tutor account.", true);
+      } finally {
+        button.disabled = false; button.textContent = "Create Account";
+      }
+    }, true);
+  }
+
+  // This capture listener routes approved tutors to their workspace while
+  // retaining the original student dashboard flow for student accounts.
+  document.getElementById("loginForm").addEventListener("submit", e => tutor.handleLogin(e), true);
+
+  tutor.el("gga-tutor-signout").addEventListener("click", async () => {
+    const { error } = await supabaseClient.auth.signOut();
+    if (error) { tutor.notice(error.message, true); return; }
+    tutorWorkspace.style.display = "none";
+    document.querySelector("body > header")?.style.removeProperty("display");
+    document.querySelector("body > main")?.style.removeProperty("display");
+    document.querySelector("body > footer")?.style.removeProperty("display");
+    openModal("login");
+  });
+
+  tutor.initForms();
+
+  // Expose no credentials or privileged operations. Only the signed-in user's
+  // normal Supabase session and row-level security policies are used.
+  window.ggaTutorDashboard = {
+    refresh: async () => {
+      const result = await tutor.profile();
+      if (!result || result.profile?.role !== "tutor" || result.profile?.approval_status !== "approved") {
+        throw new Error("An approved tutor account is required.");
+      }
+      tutor.user = result.user;
+      return tutor.loadWorkspace();
+    }
+  };
+
+  // Fill tutor.user on dashboard entry, after the user has passed the role check.
+  const originalLoadWorkspace = tutor.loadWorkspace.bind(tutor);
+  tutor.loadWorkspace = async () => {
+    const { data: { user }, error } = await supabaseClient.auth.getUser();
+    if (error) throw error;
+    if (!user) throw new Error("Please sign in again.");
+    tutor.user = user;
+    tutor.el("gga-tutor-workspace").style.display = "block";
+    return originalLoadWorkspace();
+  };
+})();
+
 </script>
 </body>
 </html>
