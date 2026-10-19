@@ -38,43 +38,58 @@
     .course-panel{margin-top:20px;padding:18px;border:1px solid var(--border);border-radius:12px}.lesson{padding:12px;border:1px solid #e6ebf2;border-radius:8px;margin-top:10px}
     @media(max-width:760px){header{justify-content:center}nav{justify-content:center}.hero{grid-template-columns:1fr;padding:45px 6%}.cards{grid-template-columns:1fr}.about-grid{grid-template-columns:1fr}section.content{padding:38px 6%}#student-dashboard{padding:14px}}
     /* Mobile-friendly subject catalogue */
+
+
+/* Subject catalogue layout */
 .subject-list {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
   margin: 20px 0 0;
   padding: 0;
   list-style: none;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .subject-item {
-  display: block;
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   min-width: 0;
   box-sizing: border-box;
-  padding: 16px;
+  padding: 18px;
   border: 1px solid #dbe5f0;
-  border-radius: 12px;
+  border-radius: 14px;
   background: #ffffff;
+  box-shadow: 0 3px 10px rgba(18, 59, 112, 0.06);
   overflow-wrap: anywhere;
 }
 
 .subject-item strong {
   display: block;
   margin-bottom: 8px;
-  color: #102746;
+  color: #123b70;
   font-size: 17px;
+  line-height: 1.4;
 }
 
 .subject-item p {
-  margin: 0 0 12px;
+  margin: 0 0 14px;
   color: #64748b;
   line-height: 1.5;
+  font-size: 14px;
 }
 
 .subject-item button {
   max-width: 100%;
+  margin-top: auto;
+}
+
+@media (max-width: 480px) {
+  .subject-list {
+    grid-template-columns: 1fr;
+  }
 }
 
 
