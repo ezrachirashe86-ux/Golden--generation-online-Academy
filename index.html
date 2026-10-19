@@ -331,11 +331,12 @@ async function loadAcademyCatalogue() {
     section.appendChild(title);
 
     const { data: subjects, error: subjectError } =
-      await supabaseClient
-        .from("catalog_subjects")
-        .select("id, name, description, sort_order")
-        .eq("category_id", category.id)
-        .order("sort_order");
+  await supabaseClient
+    .from("catalog_subjects")
+    .select("id, name, description, sort_order")
+    .eq("category_id", category.id)
+    .eq("curriculum_id", 3)
+    .order("sort_order");
 
     if (subjectError) {
       const message = document.createElement("p");
