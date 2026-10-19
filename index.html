@@ -356,7 +356,9 @@ async function loadAcademyCatalogue() {
     if (subjectError) {
       const message = document.createElement("p");
       message.textContent =
-        "Could not load subjects: " + subjectError.message;
+  "Could not load subjects: " +
+  subjectError.message +
+  " (Code: " + (subjectError.code || "unknown") + ")";
       section.appendChild(message);
       catalogue.appendChild(section);
       continue;
