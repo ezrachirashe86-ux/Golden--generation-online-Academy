@@ -55,7 +55,7 @@ drop policy if exists "Students submit their own payment records" on public.paym
 
 -- Free enrolment is validated server-side and cannot be granted by editable user metadata.
 create or replace function public.enrol_in_free_course(p_course_id bigint) returns bigint
-language plpgsql security definer set search_path=public,pg_temp as $$
+language plpgsql security definer set search_path='' as $$
 declare v_id bigint; v_price numeric; v_published boolean; v_role text;
 begin
  if auth.uid() is null then raise exception 'Sign in is required.'; end if;
@@ -77,7 +77,7 @@ revoke all on function public.enrol_in_free_course(bigint) from public,anon;
 grant execute on function public.enrol_in_free_course(bigint) to authenticated;
 
 create or replace function public.request_course_payment(p_course_id bigint) returns bigint
-language plpgsql security definer set search_path=public,pg_temp as $$
+language plpgsql security definer set search_path='' as $$
 declare v_id bigint; v_price numeric; v_currency text; v_published boolean; v_role text;
 begin
  if auth.uid() is null then raise exception 'Sign in is required.'; end if;
@@ -96,7 +96,7 @@ revoke all on function public.request_course_payment(bigint) from public,anon;
 grant execute on function public.request_course_payment(bigint) to authenticated;
 
 create or replace function public.submit_course_payment_proof(p_payment_id bigint,p_proof_path text,p_reference text default null) returns void
-language plpgsql security definer set search_path=public,pg_temp as $$
+language plpgsql security definer set search_path='' as $$
 begin
  if auth.uid() is null then raise exception 'Sign in is required.'; end if;
  if p_proof_path is null or split_part(p_proof_path,'/',1)<>auth.uid()::text then raise exception 'Invalid proof file path.'; end if;
@@ -109,7 +109,7 @@ revoke all on function public.submit_course_payment_proof(bigint,text,text) from
 grant execute on function public.submit_course_payment_proof(bigint,text,text) to authenticated;
 
 create or replace function public.admin_review_tutor_application(p_application_id bigint,p_decision text,p_notes text default null) returns void
-language plpgsql security definer set search_path=public,pg_temp as $$
+language plpgsql security definer set search_path='' as $$
 declare v_user uuid;
 begin
  if not private.is_admin() then raise exception 'Approved administrator access required.'; end if;
@@ -124,7 +124,7 @@ revoke all on function public.admin_review_tutor_application(bigint,text,text) f
 grant execute on function public.admin_review_tutor_application(bigint,text,text) to authenticated;
 
 create or replace function public.admin_save_course(p_course_id bigint,p_title text,p_description text,p_price numeric,p_currency text,p_published boolean,p_subject_id bigint,p_image_url text default null) returns bigint
-language plpgsql security definer set search_path=public,pg_temp as $$
+language plpgsql security definer set search_path='' as $$
 declare v_id bigint; v_category bigint; v_curriculum bigint;
 begin
  if not private.is_admin() then raise exception 'Approved administrator access required.'; end if;
@@ -145,7 +145,7 @@ revoke all on function public.admin_save_course(bigint,text,text,numeric,text,bo
 grant execute on function public.admin_save_course(bigint,text,text,numeric,text,boolean,bigint,text) to authenticated;
 
 create or replace function public.admin_assign_tutor_to_course(p_tutor_id uuid,p_course_id bigint) returns void
-language plpgsql security definer set search_path=public,pg_temp as $$
+language plpgsql security definer set search_path='' as $$
 begin
  if not private.is_admin() then raise exception 'Approved administrator access required.'; end if;
  if not exists(select 1 from public.profiles where id=p_tutor_id and role='tutor' and approval_status='approved') then raise exception 'Tutor must be approved first.'; end if;
@@ -158,7 +158,7 @@ revoke all on function public.admin_assign_tutor_to_course(uuid,bigint) from pub
 grant execute on function public.admin_assign_tutor_to_course(uuid,bigint) to authenticated;
 
 create or replace function public.admin_remove_tutor_course_assignment(p_tutor_id uuid,p_course_id bigint) returns void
-language plpgsql security definer set search_path=public,pg_temp as $$
+language plpgsql security definer set search_path='' as $$
 begin
  if not private.is_admin() then raise exception 'Approved administrator access required.'; end if;
  delete from public.tutor_course_assignments where tutor_id=p_tutor_id and course_id=p_course_id;
@@ -168,7 +168,7 @@ revoke all on function public.admin_remove_tutor_course_assignment(uuid,bigint) 
 grant execute on function public.admin_remove_tutor_course_assignment(uuid,bigint) to authenticated;
 
 create or replace function public.admin_update_payment_settings(p_beneficiary_name text,p_bank_name text,p_account_number text,p_branch_code text,p_swift_code text,p_instructions text,p_enabled boolean) returns void
-language plpgsql security definer set search_path=public,pg_temp as $$
+language plpgsql security definer set search_path='' as $$
 begin
  if not private.is_admin() then raise exception 'Approved administrator access required.'; end if;
  if p_enabled and (nullif(trim(p_beneficiary_name),'') is null or nullif(trim(p_bank_name),'') is null or nullif(trim(p_account_number),'') is null) then raise exception 'Beneficiary, bank and account number are required before enabling transfers.'; end if;
@@ -181,7 +181,7 @@ revoke all on function public.admin_update_payment_settings(text,text,text,text,
 grant execute on function public.admin_update_payment_settings(text,text,text,text,text,text,boolean) to authenticated;
 
 create or replace function public.admin_review_course_payment(p_payment_id bigint,p_decision text,p_notes text default null) returns void
-language plpgsql security definer set search_path=public,pg_temp as $$
+language plpgsql security definer set search_path='' as $$
 begin
  if not private.is_admin() then raise exception 'Approved administrator access required.'; end if;
  if p_decision not in ('verified','rejected') then raise exception 'Invalid payment decision.'; end if;
@@ -194,7 +194,7 @@ revoke all on function public.admin_review_course_payment(bigint,text,text) from
 grant execute on function public.admin_review_course_payment(bigint,text,text) to authenticated;
 
 create or replace function public.activate_enrolment_after_payment_verification() returns trigger
-language plpgsql security definer set search_path=public,pg_temp as $$
+language plpgsql security definer set search_path='' as $$
 declare v_enrollment_id bigint;
 begin
  if new.status='verified' and old.status is distinct from 'verified' then
