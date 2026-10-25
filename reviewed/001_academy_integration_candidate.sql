@@ -107,7 +107,7 @@ begin
  if p_proof_path is null or split_part(p_proof_path,'/',1)<>auth.uid()::text then raise exception 'Invalid proof file path.'; end if;
  if not exists(select 1 from storage.objects where bucket_id='payment-proofs' and name=p_proof_path and (storage.foldername(name))[1]=auth.uid()::text) then raise exception 'Upload the payment proof before submitting it.'; end if;
  update public.payments set proof_storage_path=p_proof_path,provider_reference=nullif(left(coalesce(p_reference,''),120),''),status='submitted',reviewed_by=null,reviewed_at=null,admin_note=null,updated_at=now()
- where id=p_payment_id and student_id=auth.uid() and status in ('pending','rejected');
+ where id=p_payment_id and student_id=auth.uid() and payment_method='eft' and status in ('pending','rejected');
  if not found then raise exception 'Payment record not found or cannot accept proof.'; end if;
 end $$;
 revoke all on function public.submit_course_payment_proof(bigint,text,text) from public,anon;
