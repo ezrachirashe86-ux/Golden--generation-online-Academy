@@ -540,22 +540,289 @@ const matches = (courses || []).filter(course => {
 }
 
 async function openAcademyCourse(course) {
-  const container = $("course-detail"); container.hidden = false; container.innerHTML = "";
-  const back = document.createElement("button"); back.type="button"; back.className="secondary small-button"; back.textContent="← Back to dashboard"; back.addEventListener("click", () => $("student-dashboard").scrollIntoView({behavior:"smooth"}));
-  const heading = document.createElement("h2"); heading.textContent = course.title || "Course";
-  const description = document.createElement("p"); description.textContent = course.description || "Welcome to this course.";
-  const lessonsHeading = document.createElement("h3"); lessonsHeading.textContent = "Course Modules and Lessons";
-  const status = document.createElement("p"); status.textContent = "Loading modules...";
-  container.append(back, heading, description, lessonsHeading, status); container.scrollIntoView({behavior:"smooth",block:"start"});
-  const {data:modules, error} = await supabaseClient.from("modules").select("id, title, position").eq("course_id", course.id).order("position",{ascending:true});
-  if (error) {status.textContent = "Could not load modules: " + error.message; return;}
-  status.remove();
-  if (!modules || modules.length === 0) {const p=document.createElement("p"); p.textContent="This course is published, but no modules have been added yet."; container.append(p); return;}
-  for (const module of modules) {
-    const lesson = document.createElement("div"); lesson.className="lesson";
-    const title = document.createElement("strong"); title.textContent = (module.position ? module.position + ". " : "") + module.title;
-    lesson.append(title);
-    container.append(lesson);
+  const container = $("course-detail");
+  container.hidden = false;
+  container.replaceChildren();
+  const back = document.createElement("button");
+  back.type = "button";
+  back.className = "secondary small-button";
+  back.textContent = "← Back to dashboard";
+  back.addEventListener("click", () => $("student-dashboard").scrollIntoView({behavior:"smooth"}));
+  const heading = document.createElement("h2");
+  heading.textContent = course.title || "Course";
+  const description = document.createElement("p");
+  description.textContent = course.description || "Welcome to this course.";
+  const status = document.createElement("p");
+  status.setAttribute("role", "status");
+  status.textContent = "Checking your enrolment...";
+  container.append(back, heading, description, status);
+  container.scrollIntoView({behavior:"smooth",block:"start"});
+
+  const showMessage = (message, isError = false) => {
+    status.textContent = message;
+    status.style.color = isError ? "#9f1239" : "";
+  };
+  const makeButton = (label, handler) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "secondary small-button";
+    button.textContent = label;
+    button.addEventListener("click", async () => {
+      button.disabled = true;
+      try { await handler(button); }
+      catch (error) { showMessage(error?.message || "Something went wrong. Please try again.", true); }
+      finally { button.disabled = false; }
+    });
+    container.appendChild(button);
+    return button;
+  };
+  const showLessonModules = async () => {
+    status.textContent = "Your enrolment is active. Loading course modules...";
+    const {data:modules, error} = await supabaseClient.from("modules")
+      .select("id, title, position")
+      .eq("course_id", course.id)
+      .order("position", {ascending:true});
+    if (error) {
+      showMessage("Your enrolment was checked, but the course modules could not be loaded. Please try again or contact the academy.", true);
+      return;
+    }
+    status.remove();
+    const lessonsHeading = document.createElement("h3");
+    lessonsHeading.textContent = "Course Modules and Lessons";
+    container.appendChild(lessonsHeading);
+    if (!modules || modules.length === 0) {
+      const empty = document.createElement("p");
+      empty.textContent = "This course is published, but no modules have been added yet.";
+      container.appendChild(empty);
+      return;
+    }
+    for (const module of modules) {
+      const lesson = document.createElement("div");
+      lesson.className = "lesson";
+      const title = document.createElement("strong");
+      title.textContent = (module.position ? module.position + ". " : "") + module.title;
+      lesson.appendChild(title);
+      const {data:lessons, error:lessonError} = await supabaseClient.from("lessons")
+        .select("id, title, content, video_url, position")
+        .eq("module_id", module.id)
+        .order("position", {ascending:true});
+      if (lessonError) {
+        const note = document.createElement("p");
+        note.textContent = "Lesson details are currently unavailable.";
+        lesson.appendChild(note);
+      } else if (!lessons || lessons.length === 0) {
+        const note = document.createElement("p");
+        note.textContent = "No lessons have been added to this module yet.";
+        lesson.appendChild(note);
+      } else {
+        for (const item of lessons) {
+          const lessonTitle = document.createElement("h4");
+          lessonTitle.textContent = (item.position ? item.position + ". " : "") + item.title;
+          lesson.appendChild(lessonTitle);
+          if (item.content) {
+            const content = document.createElement("p");
+            content.textContent = item.content;
+            lesson.appendChild(content);
+          }
+          if (item.video_url) {
+            try {
+              const videoUrl = new URL(item.video_url);
+              if (videoUrl.protocol === "https:" || videoUrl.protocol === "http:") {
+                const link = document.createElement("a");
+                link.href = videoUrl.href;
+                link.target = "_blank";
+                link.rel = "noopener noreferrer";
+                link.textContent = "Open lesson video";
+                lesson.appendChild(link);
+              }
+            } catch (_) {
+              // Ignore invalid video URLs rather than creating unsafe links.
+            }
+          }
+        }
+      }
+      container.appendChild(lesson);
+    }
+  };
+
+  try {
+    const {data:{user}, error:userError} = await supabaseClient.auth.getUser();
+    if (userError) throw userError;
+    if (!user) {
+      showMessage("Please sign in to enrol in this course or access its lessons.", true);
+      makeButton("Sign in", async () => openModal("login"));
+      return;
+    }
+
+    const {data:profile, error:profileError} = await supabaseClient.from("profiles")
+      .select("id, role, approval_status").eq("id", user.id).maybeSingle();
+    if (profileError) throw profileError;
+    const role = profile?.role || "student";
+
+    if (role === "admin" && profile?.approval_status === "approved") {
+      await showLessonModules();
+      return;
+    }
+    if (role === "tutor" && profile?.approval_status === "approved") {
+      await showLessonModules();
+      return;
+    }
+
+    const {data:enrolment, error:enrolmentError} = await supabaseClient.from("enrollments")
+      .select("id, enrollment_status, enrollment_type")
+      .eq("student_id", user.id)
+      .eq("course_id", course.id)
+      .eq("enrollment_status", "active")
+      .maybeSingle();
+    if (enrolmentError) throw enrolmentError;
+    if (enrolment) {
+      await showLessonModules();
+      return;
+    }
+
+    status.textContent = Number(course.price || 0) === 0
+      ? "This course is free. Enrol to unlock its lessons."
+      : "Enrolment is required before you can access this course's lessons.";
+
+    if (Number(course.price || 0) === 0) {
+      makeButton("Enrol in Free Course", async () => {
+        showMessage("Requesting free enrolment...");
+        const {error} = await supabaseClient.rpc("enrol_in_free_course", {p_course_id: course.id});
+        if (error) {
+          showMessage("Free enrolment is not enabled in the database yet. The reviewed academy integration must be installed before enrolment can be completed.", true);
+          return;
+        }
+        showMessage("Free enrolment confirmed. Loading your course...");
+        await showLessonModules();
+      });
+      return;
+    }
+
+    const {data:paymentSettings, error:settingsError} = await supabaseClient
+      .from("academy_payment_settings")
+      .select("beneficiary_name, bank_name, account_number, branch_code, swift_code, instructions, enabled")
+      .eq("id", 1).eq("enabled", true).maybeSingle();
+    if (settingsError || !paymentSettings) {
+      showMessage("EFT enrolment is not ready yet. Payment instructions and the reviewed database integration must be configured by the academy administrator first.", true);
+      return;
+    }
+
+    const bankCard = document.createElement("div");
+    bankCard.className = "subject-item";
+    const bankHeading = document.createElement("h3");
+    bankHeading.textContent = "Academy EFT payment details";
+    bankCard.appendChild(bankHeading);
+    const addBankLine = (label, value) => {
+      if (!value) return;
+      const line = document.createElement("p");
+      const strong = document.createElement("strong");
+      strong.textContent = label + ": ";
+      line.append(strong, document.createTextNode(value));
+      bankCard.appendChild(line);
+    };
+    addBankLine("Beneficiary", paymentSettings.beneficiary_name);
+    addBankLine("Bank", paymentSettings.bank_name);
+    addBankLine("Account number", paymentSettings.account_number);
+    addBankLine("Branch code", paymentSettings.branch_code);
+    addBankLine("SWIFT/BIC", paymentSettings.swift_code);
+    addBankLine("Instructions", paymentSettings.instructions);
+    const priceLine = document.createElement("p");
+    priceLine.textContent = "Course price: " + String(course.price) + (course.currency ? " " + course.currency : " (currency shown on the academy payment instructions)");
+    bankCard.appendChild(priceLine);
+    container.appendChild(bankCard);
+
+    const {data:payments, error:paymentsError} = await supabaseClient.from("payments")
+      .select("id, status, proof_storage_path, created_at")
+      .eq("student_id", user.id).eq("course_id", course.id)
+      .order("created_at", {ascending:false});
+    if (paymentsError) {
+      showMessage("Payment instructions are available, but your payment status could not be checked. Please refresh or contact the academy.", true);
+      return;
+    }
+    const currentPayment = (payments || []).find(p => ["pending", "rejected"].includes(p.status));
+    const waitingPayment = (payments || []).find(p => ["submitted", "under_review", "verified"].includes(p.status));
+
+    if (waitingPayment && waitingPayment.status !== "verified") {
+      const note = document.createElement("p");
+      note.textContent = "Your payment proof has been submitted and is awaiting administrator review. You can return here later to check access.";
+      container.appendChild(note);
+      return;
+    }
+    if (waitingPayment?.status === "verified") {
+      showMessage("Your payment is marked verified. If access has not opened yet, refresh and contact the academy administrator.", true);
+      return;
+    }
+
+    const renderProofForm = paymentId => {
+      const form = document.createElement("form");
+      form.className = "subject-item";
+      const formHeading = document.createElement("h3");
+      formHeading.textContent = "Submit proof of payment";
+      const fileLabel = document.createElement("label");
+      fileLabel.textContent = "Payment proof (PDF, JPG or PNG; maximum 5 MB)";
+      const fileInput = document.createElement("input");
+      fileInput.type = "file";
+      fileInput.accept = "application/pdf,image/jpeg,image/png";
+      fileInput.required = true;
+      const refLabel = document.createElement("label");
+      refLabel.textContent = "Bank reference (optional)";
+      const refInput = document.createElement("input");
+      refInput.type = "text";
+      refInput.maxLength = 120;
+      refInput.placeholder = "EFT reference";
+      const submit = document.createElement("button");
+      submit.type = "submit";
+      submit.className = "secondary";
+      submit.textContent = "Upload and Submit Proof";
+      form.append(formHeading, fileLabel, fileInput, refLabel, refInput, submit);
+      container.appendChild(form);
+      form.addEventListener("submit", async event => {
+        event.preventDefault();
+        const file = fileInput.files && fileInput.files[0];
+        if (!file) { showMessage("Please choose your payment proof file.", true); return; }
+        if (file.size > 5 * 1024 * 1024) { showMessage("The proof file must be 5 MB or smaller.", true); return; }
+        const allowed = ["application/pdf", "image/jpeg", "image/png"];
+        if (!allowed.includes(file.type)) { showMessage("Please upload a PDF, JPG or PNG file.", true); return; }
+        submit.disabled = true;
+        showMessage("Uploading proof of payment securely...");
+        try {
+          const extension = file.type === "application/pdf" ? "pdf" : file.type === "image/png" ? "png" : "jpg";
+          const proofPath = user.id + "/" + paymentId + "-" + Date.now() + "." + extension;
+          const {error:uploadError} = await supabaseClient.storage.from("payment-proofs").upload(proofPath, file, {upsert:false, contentType:file.type});
+          if (uploadError) throw uploadError;
+          const {error:submitError} = await supabaseClient.rpc("submit_course_payment_proof", {
+            p_payment_id:paymentId, p_proof_path:proofPath, p_reference:refInput.value.trim() || null
+          });
+          if (submitError) throw submitError;
+          form.remove();
+          showMessage("Proof submitted successfully. The academy administrator must verify the cleared payment before paid lessons unlock.");
+        } catch (error) {
+          showMessage(error?.message || "Proof could not be submitted. Please try again.", true);
+        } finally {
+          submit.disabled = false;
+        }
+      });
+    };
+
+    if (currentPayment) {
+      showMessage(currentPayment.status === "rejected"
+        ? "Your previous proof was rejected. You can upload a corrected proof below."
+        : "Your payment request exists. Upload proof of payment to send it for review.");
+      renderProofForm(currentPayment.id);
+    } else {
+      makeButton("I have made an EFT transfer — continue", async () => {
+        showMessage("Creating your payment request...");
+        const {data, error} = await supabaseClient.rpc("request_course_payment", {p_course_id: course.id});
+        if (error) {
+          showMessage("The payment request could not be created. The reviewed database integration may not be installed yet, or payment settings may need attention.", true);
+          return;
+        }
+        showMessage("Payment request created. Upload your proof of payment below.");
+        renderProofForm(data);
+      });
+    }
+  } catch (error) {
+    showMessage("We could not check your enrolment. Please sign in again or contact the academy if the problem continues.", true);
   }
 }
 
