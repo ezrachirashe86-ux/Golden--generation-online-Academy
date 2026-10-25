@@ -60,7 +60,7 @@ begin
  select price,published into v_price,v_published from public.courses where id=p_course_id;
  if not found or v_published is distinct from true then raise exception 'Course is unavailable.'; end if;
  if coalesce(v_price,0)<>0 then raise exception 'This course requires payment.'; end if;
- select id into v_id from public.enrollments where student_id=auth.uid() and course_id=p_course_id and enrollment_status in ('active','pending') limit 1;
+ select id into v_id from public.enrollments where student_id=auth.uid() and course_id=p_course_id limit 1;
  if v_id is null then
    insert into public.enrollments(student_id,course_id,enrollment_status,enrollment_type) values(auth.uid(),p_course_id,'active','free') returning id into v_id;
  else
@@ -209,6 +209,7 @@ end;
 $$;
 drop trigger if exists trg_activate_enrolment_after_payment_verification on public.payments;
 create trigger trg_activate_enrolment_after_payment_verification after update of status on public.payments for each row execute function public.activate_enrolment_after_payment_verification();
+revoke all on function public.activate_enrolment_after_payment_verification() from public, anon, authenticated;
 
 insert into storage.buckets(id,name,public,file_size_limit,allowed_mime_types)
 values('payment-proofs','payment-proofs',false,5242880,array['application/pdf','image/jpeg','image/png'])
