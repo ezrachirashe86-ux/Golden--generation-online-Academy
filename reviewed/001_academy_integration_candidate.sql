@@ -189,7 +189,7 @@ revoke all on function public.admin_review_course_payment(bigint,text,text) from
 grant execute on function public.admin_review_course_payment(bigint,text,text) to authenticated;
 
 create or replace function public.activate_enrolment_after_payment_verification() returns trigger
-language plpgsql security definer set search_path=public,pg_temp as $
+language plpgsql security definer set search_path=public,pg_temp as $$
 declare v_enrollment_id bigint;
 begin
  if new.status='verified' and old.status is distinct from 'verified' then
@@ -205,7 +205,8 @@ begin
   where id=new.id and enrollment_id is distinct from v_enrollment_id;
  end if;
  return new;
-end $;
+end;
+$$;
 drop trigger if exists trg_activate_enrolment_after_payment_verification on public.payments;
 create trigger trg_activate_enrolment_after_payment_verification after update of status on public.payments for each row execute function public.activate_enrolment_after_payment_verification();
 
