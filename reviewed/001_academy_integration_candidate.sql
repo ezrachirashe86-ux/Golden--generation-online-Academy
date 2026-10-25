@@ -189,6 +189,7 @@ begin
    select 1 from public.payments p
    join storage.objects o on o.bucket_id='payment-proofs' and o.name=p.proof_storage_path
    where p.id=p_payment_id and p.proof_storage_path is not null
+     and (storage.foldername(o.name))[1]=p.student_id::text
  ) then
    raise exception 'A stored payment proof is required before verification.';
  end if;
