@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Golden Generation Online Academy</title>
+  <meta name="description" content="Quality online education connecting students with qualified tutors worldwide.">
+  <style>
+    :root{--navy:#102746;--blue:#1769aa;--gold:#f2b632;--light:#f4f7fb;--text:#243247;--border:#dbe5f0}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,sans-serif;color:var(--text);line-height:1.6}
+    header{background:#fff;padding:14px 6%;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;box-shadow:0 2px 10px #0001}
+    .brand{color:var(--navy);font-weight:bold;font-size:19px}.brand span{color:#c58b08}
+    nav{display:flex;gap:12px;flex-wrap:wrap;align-items:center}nav a{color:var(--navy);text-decoration:none;font-weight:600}
+    button{border:0;border-radius:7px;padding:12px 18px;font-weight:bold;cursor:pointer;font-size:15px}
+    button:disabled{opacity:.6;cursor:wait}.primary{background:var(--gold);color:var(--navy)}.secondary{background:var(--blue);color:#fff}
+    .hero{background:linear-gradient(120deg,#102746,#1769aa);color:#fff;padding:64px 7%;display:grid;grid-template-columns:1.5fr 1fr;gap:30px;align-items:center}
+    .hero h1{font-size:clamp(32px,5vw,52px);line-height:1.15;margin:0 0 20px}.hero p{font-size:18px;max-width:650px}
+    .hero-panel,.about-panel{background:#ffffff12;border:1px solid #ffffff40;border-radius:16px;padding:26px}
+    section.content{padding:48px 7%}.soft{background:var(--light)}.section-heading{text-align:center;margin:0 auto 28px;max-width:700px}
+    .section-heading h2{color:var(--navy);font-size:30px;margin-bottom:8px}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+    .card{background:#fff;border-radius:12px;padding:22px;box-shadow:0 4px 20px #10274612;border:1px solid #e6ebf2}.card h3{color:var(--navy);margin-top:8px}
+    .symbol{font-size:32px}.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center}
+    .cta{background:var(--navy);color:#fff;text-align:center;padding:44px 7%}.cta h2{font-size:30px}
+    footer{background:#091a30;color:#fff;padding:28px 7%;text-align:center}
+    .modal{display:none;position:fixed;inset:0;background:#07172dcc;z-index:10;padding:18px;align-items:center;justify-content:center;overflow-y:auto}
+    .modal-box{background:#fff;width:100%;max-width:440px;border-radius:14px;padding:25px;position:relative;margin:auto}
+    .modal-box h2{color:var(--navy);margin-top:0}.close{position:absolute;top:8px;right:10px;background:transparent;font-size:26px;padding:4px 10px}
+    .field{margin:14px 0}.field label{display:block;font-weight:bold;margin-bottom:5px}.field input{width:100%;padding:12px;border:1px solid #cbd4e0;border-radius:7px;font-size:16px}
+    .full{width:100%}.switch{text-align:center;font-size:14px}.switch a{color:var(--blue);cursor:pointer;font-weight:bold}#authMessage{font-size:14px;overflow-wrap:anywhere}
+    #student-dashboard{display:none;max-width:1100px;margin:30px auto;padding:24px;color:#172554}
+    .dashboard-banner{background:#123b70;color:#fff;padding:26px;border-radius:16px}
+    .dashboard-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:20px}
+    .dashboard-card{padding:18px;border:1px solid var(--border);border-radius:12px;min-width:0}
+    .catalogue{margin-top:24px;padding:20px;border:1px solid var(--border);border-radius:12px;background:#fff}
+    .category{margin-top:22px;padding-top:14px;border-top:1px solid #e6ebf2}.subject-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;padding:0;list-style:none}
+    .subject-item{border:1px solid #dbe5f0;border-radius:9px;padding:12px;background:#fbfdff}.subject-item p{margin:5px 0 10px;font-size:14px}
+    .small-button{padding:8px 12px;font-size:14px}.muted{color:#64748b}.notice{padding:12px;border-radius:8px;background:#eff6ff;color:#1e3a8a}
+    .course-panel{margin-top:20px;padding:18px;border:1px solid var(--border);border-radius:12px}.lesson{padding:12px;border:1px solid #e6ebf2;border-radius:8px;margin-top:10px}
+    @media(max-width:760px){header{justify-content:center}nav{justify-content:center}.hero{grid-template-columns:1fr;padding:45px 6%}.cards{grid-template-columns:1fr}.about-grid{grid-template-columns:1fr}section.content{padding:38px 6%}#student-dashboard{padding:14px}}
+    /* Mobile-friendly subject catalogue */
+
+
+/* Subject catalogue layout */
+.subject-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.subject-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 18px;
+  border: 1px solid #dbe5f0;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 3px 10px rgba(18, 59, 112, 0.06);
+  overflow-wrap: anywhere;
+}
+
+.subject-item strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #123b70;
+  font-size: 17px;
+  line-height: 1.4;
+}
+
+.subject-item p {
+  margin: 0 0 14px;
+  color: #64748b;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.subject-item button {
+  max-width: 100%;
+  margin-top: auto;
+}
+
+@media (max-width: 480px) {
+  .subject-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+    
+/* Separate student workspace */
+body.student-workspace header,
+body.student-workspace main,
+body.student-workspace footer {
+  display: none !important;
+}
+
+body.student-workspace #student-dashboard {
+  display: block;
+  min-height: 100vh;
+  margin: 0;
+  padding: 24px 16px;
+  background: #f4f6fa;
+  color: #142c4e;
+}
+
+  </style>
+</head>
+<body>
+<header>
+  <div class="brand">GOLDEN GENERATION <span>ACADEMY</span></div>
+  <nav>
+    <a href="#home">Home</a><a href="#courses">Courses</a><a href="#tutors">Tutors</a><a href="#about">About</a>
+    <button class="secondary" type="button" onclick="openModal('login')">Student Login</button>
+    <button class="primary" type="button" onclick="openModal('register')">Register</button>
+  </nav>
+</header>
+<main>
+  <section class="hero" id="home">
+    <div><p><strong>LEARN WITHOUT LIMITS</strong></p><h1>Quality Education for a Golden Future</h1>
+      <p>Learn from qualified, experienced tutors through an international online school designed to make quality education accessible.</p>
+      <button class="primary" type="button" onclick="openModal('register')">Join Our Academy</button>
+      <button class="secondary" type="button" onclick="document.getElementById('courses').scrollIntoView()">Explore Courses</button>
+    </div>
+    <div class="hero-panel"><h2>Your Future Starts Here</h2><p>🌍 Learn from anywhere</p><p>👩‍🏫 Connect with qualified tutors</p><p>📚 Access learning resources</p><p>🎯 Build skills and confidence</p></div>
+  </section>
+  <section class="content" id="courses"><div class="section-heading"><h2>Explore Our Learning Areas</h2><p>School subjects, digital skills and personal development.</p></div>
+    <div class="cards">
+      <article class="card"><div class="symbol">📘</div><h3>Academic Subjects</h3><p>School subjects, exam preparation and support with challenging topics.</p></article>
+      <article class="card"><div class="symbol">💻</div><h3>Digital Skills</h3><p>Technology, computer and practical digital skills.</p></article>
+      <article class="card"><div class="symbol">🌟</div><h3>Personal Development</h3><p>Communication, critical thinking and lifelong learning.</p></article>
+    </div>
+  </section>
+  <section class="content soft" id="tutors"><div class="section-heading"><h2>Learn With Great Teachers</h2><p>We aim to connect learners with qualified and experienced educators around the world.</p></div>
+    <div class="cards">
+      <article class="card"><div class="symbol">👩‍🏫</div><h3>Qualified Educators</h3><p>Knowledgeable teachers who care about student progress.</p></article>
+      <article class="card"><div class="symbol">🌐</div><h3>Global Community</h3><p>Learn across borders and benefit from diverse educational experiences.</p></article>
+      <article class="card"><div class="symbol">🎓</div><h3>Student Focus</h3><p>Learning that supports academic, professional and personal growth.</p></article>
+    </div>
+  </section>
+  <section class="content" id="about"><div class="about-grid"><div><h2>About Golden Generation Online Academy</h2>
+    <p>Golden Generation Online Academy is an international online school with a mission to make quality education affordable and accessible to students from diverse backgrounds.</p>
+    <p>Our vision is to build a trusted global education community that develops students academically, professionally and personally.</p></div>
+    <div class="card"><h3>Our Mission</h3><p>Make high-quality education more accessible through online learning.</p><h3>Our Vision</h3><p>Build a trusted international learning community.</p><h3>Our Commitment</h3><p>Support learners with useful resources, effective teaching and opportunities to grow.</p></div>
+  </div></section>
+  <section class="cta"><h2>Ready to Begin Your Learning Journey?</h2><p>Create an account to get started.</p><button class="primary" type="button" onclick="openModal('register')">Register as a Student</button></section>
+</main>
+<footer><p><strong>Golden Generation Online Academy</strong></p><p>Quality education. Global opportunities. A golden future.</p><p>© <span id="year"></span> Golden Generation Online Academy</p></footer>
+
+<div class="modal" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+  <div class="modal-box"><button class="close" type="button" aria-label="Close" onclick="closeModal()">×</button>
+    <div id="registerPanel"><h2 id="authTitle">Student Registration</h2><p>Create your academy account.</p>
+      <form id="registerForm">
+        <div class="field"><label for="fullName">Full name</label><input id="fullName" type="text" autocomplete="name" required></div>
+        <div class="field"><label for="registerEmail">Email address</label><input id="registerEmail" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="registerPassword">Password (at least 6 characters)</label><input id="registerPassword" type="password" minlength="6" autocomplete="new-password" required></div>
+        <button class="secondary full" id="registerButton" type="submit">Create Account</button>
+      </form><p class="switch">Already registered? <a href="#" onclick="showLogin();return false">Log in</a></p>
+    </div>
+    <div id="loginPanel" hidden><h2>Student Login</h2><p>Sign in to your account.</p>
+      <form id="loginForm">
+        <div class="field"><label for="loginEmail">Email address</label><input id="loginEmail" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="loginPassword">Password</label><input id="loginPassword" type="password" autocomplete="current-password" required></div>
+        <button class="secondary full" id="loginButton" type="submit">Log In</button>
+      </form><p class="switch">Need an account? <a href="#" onclick="showRegister();return false">Register here</a></p>
+    </div>
+    <p id="authMessage" role="status" aria-live="polite"></p>
+  </div>
+</div>
+
+<section id="student-dashboard">
+  <div class="dashboard-banner"><p style="margin:0 0 8px">GOLDEN GENERATION ONLINE ACADEMY</p><h1 style="margin:0 0 8px">Student Dashboard</h1><p id="student-welcome" style="margin:0">Welcome to your learning space!</p></div>
+  <div class="dashboard-grid">
+    <div class="dashboard-card"><h2>📚 Published Courses</h2><p class="muted">Courses with lessons appear here.</p><div id="student-courses">Sign in to load your courses.</div></div>
+    <div class="dashboard-card"><h2>🗓️ Class Schedule</h2><p>Your timetable will appear here when classes are scheduled.</p></div>
+    <div class="dashboard-card"><h2>📖 Learning Resources</h2><p>Your learning resources will appear here.</p></div>
+    
+<div class="dashboard-card">
+  <h2>📝 Assessments</h2>
+  <p>View your assignments and available assessments.</p>
+  <button type="button" class="secondary small-button" onclick="openStudentPanel('assessments')">Open Assessments</button>
+</div>
+
+    
+<div class="dashboard-card">
+  <h2>📈 My Progress</h2>
+  <p>Track your learning journey and results.</p>
+  <button type="button" class="secondary small-button" onclick="openStudentPanel('progress')">View My Progress</button>
+</div>
+
+    <div class="dashboard-card"><h2>👤 My Account</h2><p id="student-email"></p><button id="student-signout" type="button" class="secondary">Sign Out</button></div>
+  </div>
+  <div class="catalogue" id="academy-catalogue"><h2>Explore Our Subjects</h2><p>Sign in to load the subject catalogue.</p></div>
+  <div class="course-panel" id="course-detail" hidden></div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+"use strict";
+const SUPABASE_URL = "https://zywubnsxxfswwyiomewl.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_4aP19D2RabynUKNfIh9H7w_rIY1PHeR";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+const $ = (id) => document.getElementById(id);
+
+$("year").textContent = new Date().getFullYear();
+
+function openModal(type) {
+  $("authModal").style.display = "flex";
+  clearAuthMessage();
+  type === "login" ? showLogin() : showRegister();
+}
+function closeModal() {$("authModal").style.display = "none"; clearAuthMessage();}
+function showLogin() {$("registerPanel").hidden = true; $("loginPanel").hidden = false; clearAuthMessage();}
+function showRegister() {$("registerPanel").hidden = false; $("loginPanel").hidden = true; clearAuthMessage();}
+function clearAuthMessage() {$("authMessage").textContent = "";}
+function showAuthMessage(message, isError = false) {
+  $("authMessage").textContent = message;
+  $("authMessage").style.color = isError ? "#b42318" : "#176b37";
+}
+
+$("authModal").addEventListener("click", (event) => {if (event.target === $("authModal")) closeModal();});
+
+$("registerForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const button = $("registerButton");
+  const name = $("fullName").value.trim();
+  const email = $("registerEmail").value.trim();
+  const password = $("registerPassword").value;
+  if (!name || !email || password.length < 6) {showAuthMessage("Enter your name, a valid email and a password of at least 6 characters.", true); return;}
+  button.disabled = true; button.textContent = "Creating account..."; showAuthMessage("Please wait...");
+  try {
+    const {data, error} = await supabaseClient.auth.signUp({email, password, options:{data:{full_name:name, account_type:"student"}}});
+    if (error) throw error;
+    showAuthMessage(data.session ? "Account created. You are signed in." : "Registration received. Check your email for a confirmation link if required.");
+    if (data.session) await showDashboard(email);
+  } catch (error) {showAuthMessage(error.message || "Registration failed. Please try again.", true);}
+  finally {button.disabled = false; button.textContent = "Create Account";}
+});
+
+$("loginForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const button = $("loginButton");
+  const email = $("loginEmail").value.trim();
+  const password = $("loginPassword").value;
+  button.disabled = true; button.textContent = "Signing in..."; showAuthMessage("Please wait...");
+  try {
+    const {error} = await supabaseClient.auth.signInWithPassword({email, password});
+    if (error) throw error;
+    showAuthMessage("Login successful. Welcome to your dashboard.");
+    await showDashboard(email);
+  } catch (error) {showAuthMessage(error.message || "Login failed. Check your email and password.", true);}
+  finally {button.disabled = false; button.textContent = "Log In";}
+});
+
+async function showDashboard(email) {
+  $("student-welcome").textContent = "Welcome, " + email + "!";
+  $("student-email").textContent = email;
+  document.body.classList.add("student-workspace");
+$("student-dashboard").style.display = "block";
+  closeModal();
+  $("student-dashboard").scrollIntoView({behavior:"smooth"});
+  await Promise.allSettled([loadStudentCourses(), loadAcademyCatalogue()]);
+}
+  
+function openStudentPanel(panel) {
+  const detail = $("course-detail");
+  detail.hidden = false;
+  detail.replaceChildren();
+
+  const heading = document.createElement("h2");
+  heading.textContent = panel === "assessments"
+    ? "📝 Assessments"
+    : "📈 My Progress";
+  detail.appendChild(heading);
+
+  const message = document.createElement("p");
+  message.textContent = panel === "assessments"
+    ? "Your assessments will appear here when they are made available by your academy."
+    : "Your learning progress will appear here as your courses and assessment results are recorded.";
+  detail.appendChild(message);
+
+  const closeButton = document.createElement("button");
+  closeButton.type = "button";
+  closeButton.className = "secondary small-button";
+  closeButton.textContent = "Close";
+  closeButton.addEventListener("click", () => {
+    detail.hidden = true;
+    detail.replaceChildren();
+  });
+  detail.appendChild(closeButton);
+
+  detail.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+
+
+async function loadAcademyCatalogue() {
+  const catalogue = $("academy-catalogue");
+  catalogue.replaceChildren();
+
+  const heading = document.createElement("h2");
+  heading.textContent = "Explore Our Subjects";
+  catalogue.appendChild(heading);
+
+  const intro = document.createElement("p");
+  intro.className = "muted";
+  intro.textContent =
+    "Explore popular subjects, search the full catalogue, or show all subjects.";
+  catalogue.appendChild(intro);
+
+  const { data: categories, error } = await supabaseClient
+    .from("catalog_categories")
+    .select("id, slug, name, sort_order")
+    .order("sort_order");
+
+  if (error) {
+    const message = document.createElement("p");
+    message.className = "notice";
+    message.textContent = "Could not load categories: " + error.message;
+    catalogue.appendChild(message);
+    return;
+  }
+
+  if (!categories || categories.length === 0) {
+    catalogue.append("No categories are available yet.");
+    return;
+  }
+
+  for (const category of categories) {
+    const section = document.createElement("section");
+    section.className = "category";
+
+    const title = document.createElement("h3");
+    title.textContent = category.name;
+    section.appendChild(title);
+
+    const { data: subjects, error: subjectError } =
+  await supabaseClient
+    .from("catalog_subjects")
+    .select("id, name, description, sort_order")
+    .eq("category_id", category.id)
+    .eq("curriculum_id", 3)
+    .order("sort_order");
+
+    if (subjectError) {
+      const message = document.createElement("p");
+      message.textContent =
+  "Could not load subjects: " +
+  subjectError.message +
+  " (Code: " + (subjectError.code || "unknown") + ")";
+      section.appendChild(message);
+      catalogue.appendChild(section);
+      continue;
+    }
+
+    if (!subjects || subjects.length === 0) {
+      const message = document.createElement("p");
+      message.textContent = "Subjects are being prepared.";
+      section.appendChild(message);
+      catalogue.appendChild(section);
+      continue;
+    }
+
+    const isPrimary =
+      (category.slug || "").toLowerCase().includes("primary") ||
+      (category.name || "").toLowerCase().includes("primary");
+
+    let searchInput = null;
+    let showAllButton = null;
+    let list = document.createElement("ul");
+    list.className = "subject-list";
+    section.appendChild(list);
+
+    let showAll = false;
+
+    function renderSubjects() {
+      list.replaceChildren();
+
+      const term = searchInput
+        ? searchInput.value.trim().toLowerCase()
+        : "";
+
+      const filtered = subjects.filter(subject =>
+        !term ||
+        (subject.name || "").toLowerCase().includes(term) ||
+        (subject.description || "").toLowerCase().includes(term)
+      );
+
+      const visible = isPrimary && !showAll && !term
+        ? filtered.slice(0, 5)
+        : filtered;
+
+      if (visible.length === 0) {
+        const item = document.createElement("li");
+        item.textContent = "No matching subjects found.";
+        list.appendChild(item);
+      }
+
+      for (const subject of visible) {
+        const item = document.createElement("li");
+        item.className = "subject-item";
+
+        const name = document.createElement("strong");
+        name.textContent = subject.name;
+
+        const description = document.createElement("p");
+        description.textContent =
+          subject.description || "Explore this subject.";
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "secondary small-button";
+        button.textContent = "Find Course";
+        button.addEventListener("click", () =>
+          findSubjectCourse(subject)
+        );
+
+        item.append(name, description, button);
+        list.appendChild(item);
+      }
+
+      if (showAllButton) {
+        showAllButton.textContent = showAll
+          ? "Show fewer subjects"
+          : "Show all subjects (" + subjects.length + ")";
+        showAllButton.hidden = Boolean(term);
+      }
+    }
+
+    if (isPrimary) {
+      searchInput = document.createElement("input");
+      searchInput.type = "search";
+      searchInput.placeholder = "Search all Primary Education subjects";
+      searchInput.setAttribute(
+        "aria-label",
+        "Search all Primary Education subjects"
+      );
+      searchInput.style.width = "100%";
+      searchInput.style.boxSizing = "border-box";
+      searchInput.style.margin = "8px 0";
+
+      searchInput.addEventListener("input", renderSubjects);
+      section.insertBefore(searchInput, list);
+
+      showAllButton = document.createElement("button");
+      showAllButton.type = "button";
+      showAllButton.className = "secondary small-button";
+      showAllButton.style.margin = "8px 0";
+      showAllButton.addEventListener("click", () => {
+        showAll = !showAll;
+        renderSubjects();
+      });
+
+      section.insertBefore(showAllButton, list);
+    }
+
+    renderSubjects();
+    catalogue.appendChild(section);
+  }
+}
+async function loadStudentCourses() {
+  const container = $("student-courses");
+  container.textContent = "Loading published courses...";
+  const {data:courses, error} = await supabaseClient.from("courses")
+    .select("id, title, description, price, published")
+    .eq("published", true).order("title");
+  if (error) {container.textContent = "Could not load courses: " + error.message; return;}
+  container.replaceChildren();
+  if (!courses || courses.length === 0) {container.textContent = "No published courses found in the courses table yet. See the subject catalogue below."; return;}
+  for (const course of courses) {
+    const card = document.createElement("div");
+    card.className = "subject-item";
+    const title = document.createElement("h3"); title.textContent = course.title || "Untitled course";
+    const description = document.createElement("p"); description.textContent = course.description || "Course details";
+    const price = document.createElement("p"); price.textContent = Number(course.price || 0) === 0 ? "Free course" : "Price: " + course.price;
+    const open = document.createElement("button"); open.type = "button"; open.className = "secondary small-button"; open.textContent = "Open Course";
+    open.addEventListener("click", () => openAcademyCourse(course));
+    card.append(title, description, price, open); container.appendChild(card);
+  }
+}
+
+
+
+async function findSubjectCourse(subject) {
+  const detail = $("course-detail"); detail.hidden = false; detail.innerHTML = "";
+  const heading = document.createElement("h2"); heading.textContent = subject.name;
+  const message = document.createElement("p"); message.textContent = "Checking published courses for this subject...";
+  detail.append(heading, message); detail.scrollIntoView({behavior:"smooth",block:"start"});
+  const {data:courses, error} = await supabaseClient.from("courses")
+    .select("id, title, description, price, published").eq("published", true).order("title");
+  if (error) {message.textContent = "Could not search courses: " + error.message; return;}
+  const needle = subject.name.trim().toLowerCase();
+const subjectWords = needle.split(/\s+/).filter(word => word.length > 2);
+const normalize = value => (value || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  
+const matches = (courses || []).filter(course => {
+  const title = normalize(course.title);
+  return title.includes(normalize(subject.name)) ||
+    normalize(subject.name).includes(title) ||
+    subjectWords.some(word => title.split(" ").includes(word));
+});
+
+  detail.replaceChildren(heading);
+  if (!matches.length) {
+    const p = document.createElement("p"); p.textContent = "This subject is listed in the catalogue, but there is no published course with a matching title in the courses table yet. To provide lessons for it, a course record and its modules/lessons must be added in Supabase."; detail.append(p); return;
+  }
+  for (const course of matches) {
+    const p = document.createElement("p"); p.textContent = course.description || "";
+    const button = document.createElement("button"); button.type="button"; button.className="secondary"; button.textContent="Open " + course.title;
+    button.addEventListener("click", () => openAcademyCourse(course));
+    detail.append(p, button);
+  }
+}
+
+async function openAcademyCourse(course) {
+  const container = $("course-detail"); container.hidden = false; container.innerHTML = "";
+  const back = document.createElement("button"); back.type="button"; back.className="secondary small-button"; back.textContent="← Back to dashboard"; back.addEventListener("click", () => $("student-dashboard").scrollIntoView({behavior:"smooth"}));
+  const heading = document.createElement("h2"); heading.textContent = course.title || "Course";
+  const description = document.createElement("p"); description.textContent = course.description || "Welcome to this course.";
+  const lessonsHeading = document.createElement("h3"); lessonsHeading.textContent = "Course Modules and Lessons";
+  const status = document.createElement("p"); status.textContent = "Loading modules...";
+  container.append(back, heading, description, lessonsHeading, status); container.scrollIntoView({behavior:"smooth",block:"start"});
+  const {data:modules, error} = await supabaseClient.from("modules").select("id, title, position").eq("course_id", course.id).order("position",{ascending:true});
+  if (error) {status.textContent = "Could not load modules: " + error.message; return;}
+  status.remove();
+  if (!modules || modules.length === 0) {const p=document.createElement("p"); p.textContent="This course is published, but no modules have been added yet."; container.append(p); return;}
+  for (const module of modules) {
+    const lesson = document.createElement("div"); lesson.className="lesson";
+    const title = document.createElement("strong"); title.textContent = (module.position ? module.position + ". " : "") + module.title;
+    lesson.append(title);
+    container.append(lesson);
+  }
+}
+
+$("student-signout").addEventListener("click", async () => {
+  const {error} = await supabaseClient.auth.signOut();
+  if (error) {showAuthMessage(error.message, true); return;}
+  $("student-dashboard").style.display = "none";
+  openModal("login");
+  showAuthMessage("You have signed out.");
+});
+  /*
+GOLDEN GENERATION ONLINE ACADEMY — TUTOR DASHBOARD ADD-ON
+Installation: paste this entire block immediately BEFORE the final </script>
+tag in index.html. Do not delete or replace existing code.
+*/
+(() => {
+  "use strict";
+
+  const tutorStyle = document.createElement("style");
+  tutorStyle.textContent = `
+    #gga-tutor-workspace{display:none;max-width:1100px;margin:0 auto;padding:22px 14px;min-height:100vh;background:#f4f6fa;color:#142c4e}
+    #gga-tutor-workspace .gga-banner{background:#123b70;color:#fff;border-radius:14px;padding:22px}
+    #gga-tutor-workspace .gga-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:18px 0}
+    #gga-tutor-workspace .gga-card{background:#fff;border:1px solid #dbe5f0;border-radius:12px;padding:16px;min-width:0}
+    #gga-tutor-workspace input,#gga-tutor-workspace textarea,#gga-tutor-workspace select{width:100%;box-sizing:border-box;padding:10px;margin:5px 0 10px;border:1px solid #cbd5e1;border-radius:7px;font:inherit}
+    #gga-tutor-workspace textarea{min-height:78px}
+    #gga-tutor-workspace label{font-weight:700;display:block}
+    #gga-tutor-workspace .gga-item{border:1px solid #e2e8f0;border-radius:9px;padding:12px;margin:10px 0;background:#fff;overflow-wrap:anywhere}
+    #gga-tutor-workspace .gga-status{padding:10px;border-radius:8px;background:#eff6ff;color:#1e3a8a;overflow-wrap:anywhere}
+    #gga-tutor-workspace .gga-danger{background:#fff1f2;color:#9f1239}
+    #gga-tutor-workspace button{margin:4px 4px 4px 0}
+    @media(max-width:520px){#gga-tutor-workspace{padding:12px 8px}}
+  `;
+  document.head.appendChild(tutorStyle);
+
+  const tutorWorkspace = document.createElement("section");
+  tutorWorkspace.id = "gga-tutor-workspace";
+  tutorWorkspace.innerHTML = `
+    <div class="gga-banner">
+      <p style="margin:0">GOLDEN GENERATION ONLINE ACADEMY</p>
+      <h1 style="margin:4px 0">Tutor Dashboard</h1>
+      <p id="gga-tutor-welcome" style="margin:0">Welcome to your teaching workspace.</p>
+      <button id="gga-tutor-signout" class="primary" type="button" style="margin-top:14px">Sign Out</button>
+    </div>
+    <div id="gga-tutor-notice" class="gga-status" role="status" aria-live="polite" style="margin-top:14px">Loading your teaching workspace…</div>
+    <div class="gga-grid">
+      <div class="gga-card"><h2>My Assigned Courses</h2><p class="muted">Only courses assigned to your approved tutor account appear here.</p><div id="gga-tutor-courses"></div></div>
+      <div class="gga-card"><h2>Schedule a Class</h2>
+        <form id="gga-class-form">
+          <label for="gga-class-course">Assigned course</label><select id="gga-class-course" required><option value="">Choose a course</option></select>
+          <label for="gga-class-title">Class title</label><input id="gga-class-title" required maxlength="160" placeholder="e.g. Algebra revision">
+          <label for="gga-class-start">Start date and time</label><input id="gga-class-start" type="datetime-local" required>
+          <label for="gga-class-end">End date and time</label><input id="gga-class-end" type="datetime-local" required>
+          <label for="gga-class-url">Meeting link (optional)</label><input id="gga-class-url" type="url" placeholder="https://…">
+          <label for="gga-class-notes">Notes (optional)</label><textarea id="gga-class-notes"></textarea>
+          <button class="secondary" type="submit">Schedule Class</button>
+        </form>
+        <div id="gga-tutor-sessions"></div>
+      </div>
+    </div>
+    <div class="gga-grid">
+      <div class="gga-card"><h2>Course Content</h2>
+        <form id="gga-module-form">
+          <label for="gga-module-course">Assigned course</label><select id="gga-module-course" required><option value="">Choose a course</option></select>
+          <label for="gga-module-title">New module title</label><input id="gga-module-title" required maxlength="160">
+          <label for="gga-module-position">Module order</label><input id="gga-module-position" type="number" min="1" value="1" required>
+          <button class="secondary" type="submit">Add Module</button>
+        </form>
+        <form id="gga-lesson-form">
+          <label for="gga-lesson-module">Module</label><select id="gga-lesson-module" required><option value="">Choose a module</option></select>
+          <label for="gga-lesson-title">Lesson title</label><input id="gga-lesson-title" required maxlength="160">
+          <label for="gga-lesson-content">Lesson content</label><textarea id="gga-lesson-content" placeholder="Learning notes or instructions"></textarea>
+          <label for="gga-lesson-video">Video link (optional)</label><input id="gga-lesson-video" type="url" placeholder="https://…">
+          <label for="gga-lesson-position">Lesson order</label><input id="gga-lesson-position" type="number" min="1" value="1" required>
+          <button class="secondary" type="submit">Add Lesson</button>
+        </form>
+        <div id="gga-tutor-modules"></div>
+      </div>
+      <div class="gga-card"><h2>Assessments</h2>
+        <form id="gga-assessment-form">
+          <label for="gga-assessment-course">Assigned course</label><select id="gga-assessment-course" required><option value="">Choose a course</option></select>
+          <label for="gga-assessment-title">Assessment title</label><input id="gga-assessment-title" required maxlength="160">
+          <label for="gga-assessment-description">Instructions</label><textarea id="gga-assessment-description"></textarea>
+          <button class="secondary" type="submit">Create Assessment</button>
+        </form>
+        <div id="gga-tutor-assessments"></div>
+      </div>
+    </div>
+    <div class="gga-card"><h2>Student Submissions & Marking</h2><p class="muted">Submissions are shown only for assessments attached to courses assigned to you.</p><div id="gga-tutor-submissions">Choose an assigned course to load its assessments and submissions.</div></div>
+    <div class="gga-card" style="margin-top:16px"><h2>Students in My Courses</h2><div id="gga-tutor-students"></div></div>
+  `;
+  document.body.appendChild(tutorWorkspace);
+
+  const tutor = {
+    user: null,
+    courses: [],
+    modules: [],
+    assessments: [],
+    el(id) { return document.getElementById(id); },
+    notice(message, error = false) {
+      const n = this.el("gga-tutor-notice");
+      n.textContent = message;
+      n.className = error ? "gga-status gga-danger" : "gga-status";
+    },
+    node(tag, text, className) {
+      const n = document.createElement(tag);
+      if (text !== undefined && text !== null) n.textContent = text;
+      if (className) n.className = className;
+      return n;
+    },
+    async profile() {
+      const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+      if (userError) throw userError;
+      if (!user) return null;
+      const { data, error } = await supabaseClient.from("profiles")
+        .select("id, full_name, role, approval_status").eq("id", user.id).maybeSingle();
+      if (error) throw error;
+      return { user, profile: data };
+    },
+    async handleLogin(event) {
+      // Capture-phase handler prevents the older student-only handler from
+      // racing this role-aware sign-in handler.
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      const button = this.el("loginButton");
+      const email = this.el("loginEmail").value.trim();
+      const password = this.el("loginPassword").value;
+      button.disabled = true;
+      button.textContent = "Signing in…";
+      showAuthMessage("Checking your account…");
+      try {
+        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        const result = await this.profile();
+        if (!result) throw new Error("Could not identify the signed-in account.");
+        const { user, profile } = result;
+        const accountType = user.user_metadata?.account_type;
+        if (profile?.role === "tutor" && profile?.approval_status === "approved") {
+          closeModal();
+          document.body.classList.remove("student-workspace");
+          $("student-dashboard").style.display = "none";
+          document.querySelector("body > header")?.style.setProperty("display", "none");
+          document.querySelector("body > main")?.style.setProperty("display", "none");
+          document.querySelector("body > footer")?.style.setProperty("display", "none");
+          this.el("gga-tutor-workspace").style.display = "block";
+          this.el("gga-tutor-welcome").textContent = "Welcome, " + (profile.full_name || user.email || "Tutor") + ".";
+          await this.loadWorkspace();
+        } else if (accountType === "tutor") {
+          closeModal();
+          this.showApplicationForm(user, profile);
+        } else {
+          showAuthMessage("Login successful. Welcome to your dashboard.");
+          await showDashboard(email);
+        }
+      } catch (error) {
+        showAuthMessage(error.message || "Login failed. Please try again.", true);
+      } finally {
+        button.disabled = false;
+        button.textContent = "Log In";
+      }
+    },
+    showApplicationForm(user, profile) {
+      document.body.classList.remove("student-workspace");
+      $("student-dashboard").style.display = "none";
+      document.querySelector("body > header")?.style.removeProperty("display");
+      document.querySelector("body > main")?.style.removeProperty("display");
+      document.querySelector("body > footer")?.style.removeProperty("display");
+      this.el("gga-tutor-workspace").style.display = "none";
+      let box = this.el("gga-application-box");
+      if (!box) {
+        box = this.node("section");
+        box.id = "gga-application-box";
+        box.style.cssText = "max-width:680px;margin:24px auto;padding:20px;border:1px solid #dbe5f0;border-radius:14px;background:#fff";
+        box.innerHTML = `
+          <h2>Tutor Application</h2>
+          <p>Submit your teaching details for review. Tutor tools remain locked until your application is approved and courses are assigned.</p>
+          <form id="gga-application-form">
+            <label for="gga-app-name">Full name</label><input id="gga-app-name" required maxlength="160">
+            <label for="gga-app-qualifications">Qualifications</label><textarea id="gga-app-qualifications" required maxlength="3000"></textarea>
+            <label for="gga-app-subjects">Subjects you can teach</label><textarea id="gga-app-subjects" required maxlength="2000"></textarea>
+            <label for="gga-app-experience">Teaching experience</label><textarea id="gga-app-experience" required maxlength="3000"></textarea>
+            <button class="secondary" type="submit">Submit Application</button>
+            <button id="gga-app-signout" type="button">Sign Out</button>
+          </form>
+          <p id="gga-app-message" role="status" aria-live="polite"></p>`;
+        document.body.insertBefore(box, document.body.firstChild);
+        box.querySelector("#gga-application-form").addEventListener("submit", async e => {
+          e.preventDefault();
+          const submit = e.submitter;
+          if (submit) submit.disabled = true;
+          const message = box.querySelector("#gga-app-message");
+          message.textContent = "Submitting application…";
+          try {
+            const { data: existing, error: lookupError } = await supabaseClient
+              .from("tutor_applications").select("id,status").eq("user_id", user.id).maybeSingle();
+            if (lookupError) throw lookupError;
+            if (existing) {
+              message.textContent = "Your application is already recorded. Current status: " + existing.status + ". An administrator must review it.";
+              return;
+            }
+            const { error } = await supabaseClient.from("tutor_applications").insert({
+              user_id: user.id,
+              full_name: box.querySelector("#gga-app-name").value.trim(),
+              qualifications: box.querySelector("#gga-app-qualifications").value.trim(),
+              subjects: box.querySelector("#gga-app-subjects").value.trim(),
+              experience: box.querySelector("#gga-app-experience").value.trim(),
+              status: "pending"
+            });
+            if (error) throw error;
+            message.textContent = "Application submitted successfully. It is pending review; you cannot use tutor tools until approved.";
+          } catch (err) {
+            message.textContent = err.message || "Could not submit application.";
+          } finally {
+            if (submit) submit.disabled = false;
+          }
+        });
+        box.querySelector("#gga-app-signout").addEventListener("click", async () => {
+          await supabaseClient.auth.signOut();
+          box.remove();
+          openModal("login");
+        });
+      }
+      box.style.display = "block";
+      box.querySelector("#gga-app-name").value = profile?.full_name || user.user_metadata?.full_name || "";
+      box.scrollIntoView({ behavior: "smooth" });
+      (async () => {
+        try {
+          const { data, error } = await supabaseClient.from("tutor_applications")
+            .select("id,status").eq("user_id", user.id).maybeSingle();
+          if (error) throw error;
+          if (data) box.querySelector("#gga-app-message").textContent =
+            "Your application status is: " + data.status + ".";
+        } catch (err) {
+          box.querySelector("#gga-app-message").textContent = err.message || "";
+        }
+      })();
+    },
+    addOption(select, value, label) {
+      const opt = document.createElement("option");
+      opt.value = String(value);
+      opt.textContent = label;
+      select.appendChild(opt);
+    },
+    fillCourseSelects() {
+      ["gga-class-course", "gga-module-course", "gga-assessment-course"].forEach(id => {
+        const select = this.el(id);
+        select.replaceChildren();
+        this.addOption(select, "", "Choose a course");
+        this.courses.forEach(c => this.addOption(select, c.id, c.title));
+      });
+    },
+    async loadWorkspace() {
+      this.notice("Loading assigned courses…");
+      const { data: assignments, error } = await supabaseClient
+        .from("tutor_course_assignments").select("course_id").eq("tutor_id", this.user.id);
+      if (error) throw error;
+      const ids = (assignments || []).map(a => a.course_id);
+      this.courses = [];
+      if (ids.length) {
+        const { data: courses, error: courseError } = await supabaseClient.from("courses")
+          .select("id,title,description,published").in("id", ids).order("title");
+        if (courseError) throw courseError;
+        this.courses = courses || [];
+      }
+      this.fillCourseSelects();
+      const list = this.el("gga-tutor-courses");
+      list.replaceChildren();
+      if (!this.courses.length) list.append(this.node("p", "No courses have been assigned to this tutor account yet."));
+      this.courses.forEach(course => {
+        const item = this.node("div", null, "gga-item");
+        item.append(this.node("strong", course.title));
+        item.append(this.node("p", course.description || "No course description."));
+        item.append(this.node("p", course.published ? "Published" : "Unpublished"));
+        const selectBtn = this.node("button", "Load course tools", "secondary");
+        selectBtn.type = "button";
+        selectBtn.addEventListener("click", () => this.loadCourseDetails(course.id));
+        item.append(selectBtn);
+        list.append(item);
+      });
+      await this.loadSessions();
+      await this.loadStudents();
+      this.notice(this.courses.length
+        ? "Tutor workspace loaded. Select an assigned course to manage its content and assessments."
+        : "Your account is approved, but no courses are assigned yet. Ask an administrator to assign a course.");
+    },
+    async loadCourseDetails(courseId) {
+      this.el("gga-module-course").value = String(courseId);
+      this.el("gga-assessment-course").value = String(courseId);
+      this.el("gga-class-course").value = String(courseId);
+      this.el("gga-tutor-submissions").textContent = "Loading course assessments…";
+      try {
+        const { data: modules, error: moduleError } = await supabaseClient.from("modules")
+          .select("id,course_id,title,position").eq("course_id", courseId).order("position");
+        if (moduleError) throw moduleError;
+        this.modules = modules || [];
+        const moduleSelect = this.el("gga-lesson-module");
+        moduleSelect.replaceChildren();
+        this.addOption(moduleSelect, "", "Choose a module");
+        this.modules.forEach(m => this.addOption(moduleSelect, m.id, m.title));
+        const moduleList = this.el("gga-tutor-modules");
+        moduleList.replaceChildren();
+        if (!this.modules.length) moduleList.append(this.node("p", "No modules yet. Use the form above to add one."));
+        for (const m of this.modules) {
+          const item = this.node("div", null, "gga-item");
+          item.append(this.node("strong", (m.position || "") + " " + m.title));
+          const { data: lessons, error: lessonError } = await supabaseClient.from("lessons")
+            .select("id,title,position,content,video_url").eq("module_id", m.id).order("position");
+          if (lessonError) item.append(this.node("p", "Could not load lessons: " + lessonError.message));
+          else if (!lessons?.length) item.append(this.node("p", "No lessons in this module yet."));
+          else lessons.forEach(l => {
+            item.append(this.node("p", "Lesson " + (l.position || "") + ": " + l.title));
+            if (l.content) item.append(this.node("p", l.content));
+            if (l.video_url) {
+              try {
+                const u = new URL(l.video_url);
+                if (u.protocol === "https:" || u.protocol === "http:") {
+                  const a = this.node("a", "Open lesson video");
+                  a.href = u.href; a.target = "_blank"; a.rel = "noopener noreferrer";
+                  item.append(a);
+                }
+              } catch (_) {}
+            }
+          });
+          moduleList.append(item);
+        }
+        const { data: assessments, error: assessmentError } = await supabaseClient.from("assessments")
+          .select("id,course_id,title,description,created_at").eq("course_id", courseId).order("created_at");
+        if (assessmentError) throw assessmentError;
+        this.assessments = assessments || [];
+        const assessmentList = this.el("gga-tutor-assessments");
+        assessmentList.replaceChildren();
+        if (!this.assessments.length) assessmentList.append(this.node("p", "No assessments yet. Use the form above to create one."));
+        for (const a of this.assessments) {
+          const item = this.node("div", null, "gga-item");
+          item.append(this.node("strong", a.title));
+          item.append(this.node("p", a.description || "No instructions provided."));
+          const submissionsButton = this.node("button", "View submissions", "secondary");
+          submissionsButton.type = "button";
+          submissionsButton.addEventListener("click", () => this.loadSubmissions(a));
+          item.append(submissionsButton);
+          assessmentList.append(item);
+        }
+        this.el("gga-tutor-submissions").textContent = "Course loaded. Select View submissions under an assessment.";
+        this.notice("Loaded course: " + (this.courses.find(c => String(c.id) === String(courseId))?.title || courseId));
+      } catch (err) {
+        this.notice(err.message || "Could not load course tools.", true);
+      }
+    },
+    async loadSubmissions(assessment) {
+      const box = this.el("gga-tutor-submissions");
+      box.replaceChildren(this.node("p", "Loading submissions for: " + assessment.title));
+      try {
+        const { data: submissions, error } = await supabaseClient.from("assessment_submissions")
+          .select("assessment_id,student_id,submission_text,submitted_at,score,feedback,marked_at")
+          .eq("assessment_id", assessment.id).order("submitted_at", { ascending: false });
+        if (error) throw error;
+        box.replaceChildren(this.node("h3", assessment.title));
+        if (!submissions?.length) {
+          box.append(this.node("p", "No student submissions have been received yet."));
+          return;
+        }
+        for (const sub of submissions) {
+          const item = this.node("div", null, "gga-item");
+          item.append(this.node("strong", "Student ID: " + sub.student_id));
+          item.append(this.node("p", "Submitted: " + (sub.submitted_at || "Date unavailable")));
+          item.append(this.node("p", sub.submission_text || "(No written response supplied)"));
+          const scoreLabel = this.node("label", "Score");
+          const score = document.createElement("input");
+          score.type = "number"; score.min = "0"; score.step = "0.01";
+          score.value = sub.score ?? ""; score.placeholder = "Enter score";
+          const feedbackLabel = this.node("label", "Feedback");
+          const feedback = document.createElement("textarea");
+          feedback.value = sub.feedback || "";
+          const save = this.node("button", "Save Mark & Feedback", "secondary");
+          save.type = "button";
+          save.addEventListener("click", async () => {
+            if (score.value.trim() === "" || Number(score.value) < 0) {
+              this.notice("Enter a valid score of zero or greater.", true); return;
+            }
+            save.disabled = true;
+            try {
+              const { error: updateError } = await supabaseClient.from("assessment_submissions")
+                .update({ score: Number(score.value), feedback: feedback.value.trim(),
+                  marked_by: this.user.id, marked_at: new Date().toISOString() })
+                .eq("assessment_id", assessment.id).eq("student_id", sub.student_id);
+              if (updateError) throw updateError;
+              this.notice("Mark and feedback saved.");
+              sub.score = Number(score.value); sub.feedback = feedback.value.trim();
+            } catch (err) {
+              this.notice(err.message || "Could not save the mark. Check your permissions.", true);
+            } finally { save.disabled = false; }
+          });
+          item.append(scoreLabel, score, feedbackLabel, feedback, save);
+          box.append(item);
+        }
+      } catch (err) {
+        box.replaceChildren(this.node("p", "Could not load submissions: " + (err.message || "Unknown error"), "gga-status gga-danger"));
+      }
+    },
+    async loadStudents() {
+      const box = this.el("gga-tutor-students");
+      box.textContent = "Loading students in assigned courses…";
+      try {
+        if (!this.courses.length) { box.textContent = "Students will appear after courses are assigned and students are enrolled."; return; }
+        const ids = this.courses.map(c => c.id);
+        const { data: enrollments, error } = await supabaseClient.from("enrollments")
+          .select("student_id,course_id").in("course_id", ids);
+        if (error) throw error;
+        if (!enrollments?.length) { box.textContent = "No students are enrolled in your assigned courses yet."; return; }
+        const studentIds = [...new Set(enrollments.map(e => e.student_id))];
+        const { data: profiles, error: profileError } = await supabaseClient.from("profiles")
+          .select("id,full_name").in("id", studentIds);
+        if (profileError) throw profileError;
+        box.replaceChildren();
+        (profiles || []).forEach(p => {
+          const courseNames = enrollments.filter(e => e.student_id === p.id)
+            .map(e => this.courses.find(c => String(c.id) === String(e.course_id))?.title)
+            .filter(Boolean);
+          box.append(this.node("div", (p.full_name || "Student") + " — " + courseNames.join(", "), "gga-item"));
+        });
+      } catch (err) {
+        box.textContent = "Could not load student list: " + (err.message || "Check tutor permissions.");
+      }
+    },
+    async loadSessions() {
+      const box = this.el("gga-tutor-sessions");
+      box.textContent = "Loading scheduled classes…";
+      try {
+        if (!this.courses.length) { box.textContent = "Assign courses before scheduling classes."; return; }
+        const { data, error } = await supabaseClient.from("tutor_class_sessions")
+          .select("id,course_id,title,starts_at,ends_at,meeting_url,notes")
+          .eq("tutor_id", this.user.id).order("starts_at");
+        if (error) throw error;
+        box.replaceChildren(this.node("h3", "My Scheduled Classes"));
+        if (!data?.length) { box.append(this.node("p", "No classes scheduled yet.")); return; }
+        data.forEach(s => {
+          const item = this.node("div", null, "gga-item");
+          const course = this.courses.find(c => String(c.id) === String(s.course_id));
+          item.append(this.node("strong", s.title + " — " + (course?.title || "Course")));
+          item.append(this.node("p", new Date(s.starts_at).toLocaleString() + " to " + new Date(s.ends_at).toLocaleString()));
+          if (s.notes) item.append(this.node("p", s.notes));
+          if (s.meeting_url) {
+            try {
+              const u = new URL(s.meeting_url);
+              if (u.protocol === "https:" || u.protocol === "http:") {
+                const a = this.node("a", "Open meeting link"); a.href = u.href; a.target = "_blank"; a.rel = "noopener noreferrer"; item.append(a);
+              }
+            } catch (_) {}
+          }
+          box.append(item);
+        });
+      } catch (err) { box.textContent = "Could not load class schedule: " + (err.message || "Unknown error"); }
+    },
+    async submitForm(formId, handler) {
+      this.el(formId).addEventListener("submit", async e => {
+        e.preventDefault();
+        const button = e.submitter || e.currentTarget.querySelector('button[type="submit"]');
+        if (button) button.disabled = true;
+        try { await handler(); }
+        catch (err) { this.notice(err.message || "Action failed. Check your permissions.", true); }
+        finally { if (button) button.disabled = false; }
+      });
+    },
+    initForms() {
+      this.submitForm("gga-module-form", async () => {
+        const courseId = Number(this.el("gga-module-course").value);
+        const { error } = await supabaseClient.from("modules").insert({
+          course_id: courseId,
+          title: this.el("gga-module-title").value.trim(),
+          position: Number(this.el("gga-module-position").value)
+        });
+        if (error) throw error;
+        this.el("gga-module-title").value = "";
+        await this.loadCourseDetails(courseId);
+        this.notice("Module added.");
+      });
+      this.submitForm("gga-lesson-form", async () => {
+        const moduleId = Number(this.el("gga-lesson-module").value);
+        const { error } = await supabaseClient.from("lessons").insert({
+          module_id: moduleId,
+          title: this.el("gga-lesson-title").value.trim(),
+          content: this.el("gga-lesson-content").value.trim() || null,
+          video_url: this.el("gga-lesson-video").value.trim() || null,
+          position: Number(this.el("gga-lesson-position").value)
+        });
+        if (error) throw error;
+        const module = this.modules.find(m => String(m.id) === String(moduleId));
+        this.el("gga-lesson-title").value = "";
+        this.el("gga-lesson-content").value = "";
+        this.el("gga-lesson-video").value = "";
+        if (module) await this.loadCourseDetails(module.course_id);
+        this.notice("Lesson added.");
+      });
+      this.submitForm("gga-assessment-form", async () => {
+        const courseId = Number(this.el("gga-assessment-course").value);
+        const { error } = await supabaseClient.from("assessments").insert({
+          course_id: courseId,
+          title: this.el("gga-assessment-title").value.trim(),
+          description: this.el("gga-assessment-description").value.trim() || null
+        });
+        if (error) throw error;
+        this.el("gga-assessment-title").value = "";
+        this.el("gga-assessment-description").value = "";
+        await this.loadCourseDetails(courseId);
+        this.notice("Assessment created.");
+      });
+      this.submitForm("gga-class-form", async () => {
+        const courseId = Number(this.el("gga-class-course").value);
+        const start = new Date(this.el("gga-class-start").value);
+        const end = new Date(this.el("gga-class-end").value);
+        if (!(start instanceof Date) || !(end instanceof Date) || isNaN(start) || isNaN(end) || end <= start) {
+          throw new Error("The class end time must be after its start time.");
+        }
+        const meeting = this.el("gga-class-url").value.trim();
+        if (meeting && !/^https?:\/\//i.test(meeting)) throw new Error("Use a valid http or https meeting link.");
+        const { error } = await supabaseClient.from("tutor_class_sessions").insert({
+          tutor_id: this.user.id, course_id: courseId,
+          title: this.el("gga-class-title").value.trim(),
+          starts_at: start.toISOString(), ends_at: end.toISOString(),
+          meeting_url: meeting || null,
+          notes: this.el("gga-class-notes").value.trim() || null
+        });
+        if (error) throw error;
+        this.el("gga-class-title").value = "";
+        this.el("gga-class-start").value = "";
+        this.el("gga-class-end").value = "";
+        this.el("gga-class-url").value = "";
+        this.el("gga-class-notes").value = "";
+        await this.loadSessions();
+        this.notice("Class scheduled.");
+      });
+    }
+  };
+
+  // Add tutor entry points without replacing the existing student controls.
+  const nav = document.querySelector("header nav");
+  if (nav && !document.getElementById("gga-tutor-apply-button")) {
+    const apply = document.createElement("button");
+    apply.id = "gga-tutor-apply-button";
+    apply.type = "button";
+    apply.className = "secondary";
+    apply.textContent = "Become a Tutor";
+    apply.addEventListener("click", async () => {
+      try {
+        const result = await tutor.profile();
+        if (!result) {
+          openModal("register");
+          showAuthMessage("Create an account first, then sign in and choose Become a Tutor.");
+          return;
+        }
+        tutor.showApplicationForm(result.user, result.profile);
+      } catch (err) { alert(err.message || "Could not check your account."); }
+    });
+    nav.appendChild(apply);
+
+    const login = document.createElement("button");
+    login.id = "gga-tutor-login-button";
+    login.type = "button";
+    login.className = "secondary";
+    login.textContent = "Tutor Login";
+    login.addEventListener("click", () => openModal("login"));
+    nav.appendChild(login);
+  }
+
+  // A tutor account can be created using the existing registration form by
+  // setting the account type before submission; the normal student flow remains default.
+  const registerPanel = document.getElementById("registerPanel");
+  if (registerPanel && !document.getElementById("gga-register-as-tutor")) {
+    const tutorChoice = document.createElement("label");
+    tutorChoice.style.cssText = "display:flex;gap:8px;align-items:center;margin:10px 0;font-weight:normal";
+    tutorChoice.innerHTML = '<input id="gga-register-as-tutor" type="checkbox" style="width:auto"> I am registering to apply as a tutor';
+    const form = document.getElementById("registerForm");
+    const submit = document.getElementById("registerButton");
+    form.insertBefore(tutorChoice, submit);
+    const oldRegisterHandler = form; // keep the existing form and its fields unchanged
+    form.addEventListener("submit", async (event) => {
+      if (!document.getElementById("gga-register-as-tutor").checked) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      const button = document.getElementById("registerButton");
+      const name = document.getElementById("fullName").value.trim();
+      const email = document.getElementById("registerEmail").value.trim();
+      const password = document.getElementById("registerPassword").value;
+      if (!name || !email || password.length < 6) {
+        showAuthMessage("Enter your name, a valid email and a password of at least 6 characters.", true);
+        return;
+      }
+      button.disabled = true; button.textContent = "Creating tutor account…";
+      try {
+        const { data, error } = await supabaseClient.auth.signUp({
+          email, password,
+          options: { data: { full_name: name, account_type: "tutor" } }
+        });
+        if (error) throw error;
+        if (data.session) {
+          closeModal();
+          const result = await tutor.profile();
+          tutor.showApplicationForm(result.user, result.profile);
+        } else {
+          showAuthMessage("Tutor account created. Confirm your email, then log in and submit your tutor application. Tutor access remains locked until approval.");
+        }
+      } catch (err) {
+        showAuthMessage(err.message || "Could not create tutor account.", true);
+      } finally {
+        button.disabled = false; button.textContent = "Create Account";
+      }
+    }, true);
+  }
+
+  // This capture listener routes approved tutors to their workspace while
+  // retaining the original student dashboard flow for student accounts.
+  document.getElementById("loginForm").addEventListener("submit", e => tutor.handleLogin(e), true);
+
+  tutor.el("gga-tutor-signout").addEventListener("click", async () => {
+    const { error } = await supabaseClient.auth.signOut();
+    if (error) { tutor.notice(error.message, true); return; }
+    tutorWorkspace.style.display = "none";
+    document.querySelector("body > header")?.style.removeProperty("display");
+    document.querySelector("body > main")?.style.removeProperty("display");
+    document.querySelector("body > footer")?.style.removeProperty("display");
+    openModal("login");
+  });
+
+  tutor.initForms();
+
+  // Expose no credentials or privileged operations. Only the signed-in user's
+  // normal Supabase session and row-level security policies are used.
+  window.ggaTutorDashboard = {
+    refresh: async () => {
+      const result = await tutor.profile();
+      if (!result || result.profile?.role !== "tutor" || result.profile?.approval_status !== "approved") {
+        throw new Error("An approved tutor account is required.");
+      }
+      tutor.user = result.user;
+      return tutor.loadWorkspace();
+    }
+  };
+
+  // Fill tutor.user on dashboard entry, after the user has passed the role check.
+  const originalLoadWorkspace = tutor.loadWorkspace.bind(tutor);
+  tutor.loadWorkspace = async () => {
+    const { data: { user }, error } = await supabaseClient.auth.getUser();
+    if (error) throw error;
+    if (!user) throw new Error("Please sign in again.");
+    tutor.user = user;
+    tutor.el("gga-tutor-workspace").style.display = "block";
+    return originalLoadWorkspace();
+  };
+})();
+
+</script>
+</body>
+</html>
