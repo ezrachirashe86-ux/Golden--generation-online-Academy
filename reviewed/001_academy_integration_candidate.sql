@@ -49,6 +49,10 @@ do $$ begin
  end if;
 end $$;
 
+-- Students must not insert arbitrary payment rows directly through the Data API.
+-- The request_course_payment SECURITY DEFINER function calculates amount/currency server-side.
+drop policy if exists "Students submit their own payment records" on public.payments;
+
 -- Free enrolment is validated server-side and cannot be granted by editable user metadata.
 create or replace function public.enrol_in_free_course(p_course_id bigint) returns bigint
 language plpgsql security definer set search_path=public,pg_temp as $$
