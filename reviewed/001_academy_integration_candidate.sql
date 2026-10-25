@@ -29,8 +29,8 @@ do $$ begin
   end if;
   if not exists(select 1 from pg_policies where schemaname='public' and tablename='academy_payment_settings' and policyname='Admins manage academy payment settings') then
     create policy "Admins manage academy payment settings" on public.academy_payment_settings for all to authenticated
-      using(exists(select 1 from public.profiles p where p.id=auth.uid() and p.role='admin'))
-      with check(exists(select 1 from public.profiles p where p.id=auth.uid() and p.role='admin'));
+      using(private.is_admin())
+      with check(private.is_admin());
   end if;
 end $$;
 
@@ -45,7 +45,7 @@ revoke all on public.academy_admin_audit from anon, authenticated;
 grant select on public.academy_admin_audit to authenticated;
 do $$ begin
  if not exists(select 1 from pg_policies where schemaname='public' and tablename='academy_admin_audit' and policyname='Admins read academy audit') then
-  create policy "Admins read academy audit" on public.academy_admin_audit for select to authenticated using(exists(select 1 from public.profiles p where p.id=auth.uid() and p.role='admin'));
+  create policy "Admins read academy audit" on public.academy_admin_audit for select to authenticated using(private.is_admin());
  end if;
 end $$;
 
@@ -96,6 +96,7 @@ language plpgsql security definer set search_path=public,pg_temp as $$
 begin
  if auth.uid() is null then raise exception 'Sign in is required.'; end if;
  if p_proof_path is null or split_part(p_proof_path,'/',1)<>auth.uid()::text then raise exception 'Invalid proof file path.'; end if;
+ if not exists(select 1 from storage.objects where bucket_id='payment-proofs' and name=p_proof_path and (storage.foldername(name))[1]=auth.uid()::text) then raise exception 'Upload the payment proof before submitting it.'; end if;
  update public.payments set proof_storage_path=p_proof_path,provider_reference=nullif(left(coalesce(p_reference,''),120),''),status='submitted',updated_at=now()
  where id=p_payment_id and student_id=auth.uid() and status in ('pending','rejected');
  if not found then raise exception 'Payment record not found or cannot accept proof.'; end if;
@@ -107,7 +108,7 @@ create or replace function public.admin_review_tutor_application(p_application_i
 language plpgsql security definer set search_path=public,pg_temp as $$
 declare v_user uuid;
 begin
- if not exists(select 1 from public.profiles where id=auth.uid() and role='admin') then raise exception 'Administrator access required.'; end if;
+ if not private.is_admin() then raise exception 'Approved administrator access required.'; end if;
  if p_decision not in ('approved','rejected') then raise exception 'Invalid decision.'; end if;
  select user_id into v_user from public.tutor_applications where id=p_application_id and status='pending';
  if not found then raise exception 'Pending tutor application not found.'; end if;
@@ -122,7 +123,7 @@ create or replace function public.admin_save_course(p_course_id bigint,p_title t
 language plpgsql security definer set search_path=public,pg_temp as $$
 declare v_id bigint; v_category bigint; v_curriculum bigint;
 begin
- if not exists(select 1 from public.profiles where id=auth.uid() and role='admin') then raise exception 'Administrator access required.'; end if;
+ if not private.is_admin() then raise exception 'Approved administrator access required.'; end if;
  if nullif(trim(p_title),'') is null or p_price is null or p_price<0 or p_currency is null or p_currency not in ('ZAR','USD','GBP','EUR') then raise exception 'Check course title, price and currency.'; end if;
  select category_id,curriculum_id into v_category,v_curriculum from public.catalog_subjects where id=p_subject_id;
  if not found then raise exception 'Select a valid catalogue subject.'; end if;
@@ -142,7 +143,7 @@ grant execute on function public.admin_save_course(bigint,text,text,numeric,text
 create or replace function public.admin_assign_tutor_to_course(p_tutor_id uuid,p_course_id bigint) returns void
 language plpgsql security definer set search_path=public,pg_temp as $$
 begin
- if not exists(select 1 from public.profiles where id=auth.uid() and role='admin') then raise exception 'Administrator access required.'; end if;
+ if not private.is_admin() then raise exception 'Approved administrator access required.'; end if;
  if not exists(select 1 from public.profiles where id=p_tutor_id and role='tutor' and approval_status='approved') then raise exception 'Tutor must be approved first.'; end if;
  if not exists(select 1 from public.courses where id=p_course_id) then raise exception 'Course not found.'; end if;
  insert into public.tutor_course_assignments(tutor_id,course_id) values(p_tutor_id,p_course_id)
@@ -155,7 +156,7 @@ grant execute on function public.admin_assign_tutor_to_course(uuid,bigint) to au
 create or replace function public.admin_remove_tutor_course_assignment(p_tutor_id uuid,p_course_id bigint) returns void
 language plpgsql security definer set search_path=public,pg_temp as $$
 begin
- if not exists(select 1 from public.profiles where id=auth.uid() and role='admin') then raise exception 'Administrator access required.'; end if;
+ if not private.is_admin() then raise exception 'Approved administrator access required.'; end if;
  delete from public.tutor_course_assignments where tutor_id=p_tutor_id and course_id=p_course_id;
  insert into public.academy_admin_audit(admin_id,action,entity_type,entity_id) values(auth.uid(),'tutor_course_unassigned','tutor_course_assignment',p_tutor_id::text||':'||p_course_id::text);
 end $$;
@@ -165,7 +166,7 @@ grant execute on function public.admin_remove_tutor_course_assignment(uuid,bigin
 create or replace function public.admin_update_payment_settings(p_beneficiary_name text,p_bank_name text,p_account_number text,p_branch_code text,p_swift_code text,p_instructions text,p_enabled boolean) returns void
 language plpgsql security definer set search_path=public,pg_temp as $$
 begin
- if not exists(select 1 from public.profiles where id=auth.uid() and role='admin') then raise exception 'Administrator access required.'; end if;
+ if not private.is_admin() then raise exception 'Approved administrator access required.'; end if;
  if p_enabled and (nullif(trim(p_beneficiary_name),'') is null or nullif(trim(p_bank_name),'') is null or nullif(trim(p_account_number),'') is null) then raise exception 'Beneficiary, bank and account number are required before enabling transfers.'; end if;
  insert into public.academy_payment_settings(id,beneficiary_name,bank_name,account_number,branch_code,swift_code,instructions,enabled,updated_at,updated_by)
  values(1,nullif(trim(p_beneficiary_name),''),nullif(trim(p_bank_name),''),nullif(trim(p_account_number),''),nullif(trim(p_branch_code),''),nullif(trim(p_swift_code),''),nullif(trim(p_instructions),''),p_enabled,now(),auth.uid())
@@ -178,7 +179,7 @@ grant execute on function public.admin_update_payment_settings(text,text,text,te
 create or replace function public.admin_review_course_payment(p_payment_id bigint,p_decision text,p_notes text default null) returns void
 language plpgsql security definer set search_path=public,pg_temp as $$
 begin
- if not exists(select 1 from public.profiles where id=auth.uid() and role='admin') then raise exception 'Administrator access required.'; end if;
+ if not private.is_admin() then raise exception 'Approved administrator access required.'; end if;
  if p_decision not in ('verified','rejected') then raise exception 'Invalid payment decision.'; end if;
  update public.payments set status=p_decision,admin_note=left(coalesce(p_notes,''),2000),reviewed_by=auth.uid(),reviewed_at=now(),updated_at=now()
  where id=p_payment_id and status in ('submitted','under_review');
@@ -219,7 +220,7 @@ do $$ begin
   create policy "Students upload own payment proofs" on storage.objects for insert to authenticated with check(bucket_id='payment-proofs' and (storage.foldername(name))[1]=auth.uid()::text);
  end if;
  if not exists(select 1 from pg_policies where schemaname='storage' and tablename='objects' and policyname='Users read own payment proofs and admins read all') then
-  create policy "Users read own payment proofs and admins read all" on storage.objects for select to authenticated using(bucket_id='payment-proofs' and ((storage.foldername(name))[1]=auth.uid()::text or exists(select 1 from public.profiles p where p.id=auth.uid() and p.role='admin')));
+  create policy "Users read own payment proofs and admins read all" on storage.objects for select to authenticated using(bucket_id='payment-proofs' and ((storage.foldername(name))[1]=auth.uid()::text or private.is_admin()));
  end if;
 end $$;
 
