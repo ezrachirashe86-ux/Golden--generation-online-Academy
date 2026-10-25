@@ -445,33 +445,65 @@ async function loadStudentCourses() {
 
 
 async function findSubjectCourse(subject) {
-  const detail = $("course-detail"); detail.hidden = false; detail.innerHTML = "";
-  const heading = document.createElement("h2"); heading.textContent = subject.name;
-  const message = document.createElement("p"); message.textContent = "Checking published courses for this subject...";
-  detail.append(heading, message); detail.scrollIntoView({behavior:"smooth",block:"start"});
+  const detail = $("course-detail");
+  detail.hidden = false;
+  detail.replaceChildren();
+  const heading = document.createElement("h2");
+  heading.textContent = subject.name;
+  const message = document.createElement("p");
+  message.textContent = "Checking published courses for this subject...";
+  detail.append(heading, message);
+  detail.scrollIntoView({behavior:"smooth", block:"start"});
+
   const {data:courses, error} = await supabaseClient.from("courses")
-    .select("id, title, description, price, published").eq("published", true).order("title");
-  if (error) {message.textContent = "Could not search courses: " + error.message; return;}
-  const needle = subject.name.trim().toLowerCase();
-const subjectWords = needle.split(/\s+/).filter(word => word.length > 2);
-const normalize = value => (value || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
-  
-const matches = (courses || []).filter(course => {
-  const title = normalize(course.title);
-  return title.includes(normalize(subject.name)) ||
-    normalize(subject.name).includes(title) ||
-    subjectWords.some(word => title.split(" ").includes(word));
-});
+    .select("id, title, description, price, currency, published, category_id, curriculum_id, subject_id")
+    .eq("published", true)
+    .order("title");
+  if (error) {
+    message.textContent = "Could not search courses: " + error.message;
+    return;
+  }
+
+  const normalize = value => (value || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  const subjectName = normalize(subject.name);
+  const subjectWords = subjectName.split(/\s+/).filter(word => word.length > 2);
+  const matches = (courses || []).filter(course => {
+    if (Number(course.subject_id) === Number(subject.id)) return true;
+    if (course.subject_id != null) return false;
+    if (Number(course.category_id) === Number(subject.category_id) &&
+        Number(course.curriculum_id) === Number(subject.curriculum_id)) return true;
+    const title = normalize(course.title);
+    return title === subjectName ||
+      title.includes(subjectName) ||
+      (subjectWords.length > 0 && subjectWords.every(word => title.split(" ").includes(word)));
+  });
 
   detail.replaceChildren(heading);
   if (!matches.length) {
-    const p = document.createElement("p"); p.textContent = "This subject is listed in the catalogue, but there is no published course with a matching title in the courses table yet. To provide lessons for it, a course record and its modules/lessons must be added in Supabase."; detail.append(p); return;
+    const p = document.createElement("p");
+    p.textContent = "This subject is available to browse, but no published course is linked to it yet. Courses can be linked by setting the course's Subject, Category and Curriculum in the academy database. No payment is required just to browse this subject.";
+    detail.append(p);
+    return;
   }
+
   for (const course of matches) {
-    const p = document.createElement("p"); p.textContent = course.description || "";
-    const button = document.createElement("button"); button.type="button"; button.className="secondary"; button.textContent="Open " + course.title;
+    const card = document.createElement("div");
+    card.className = "subject-item";
+    const title = document.createElement("h3");
+    title.textContent = course.title || "Course";
+    const description = document.createElement("p");
+    description.textContent = course.description || "Course details will be provided by the academy.";
+    const price = document.createElement("p");
+    price.textContent = Number(course.price || 0) === 0
+      ? "Free course"
+      : "Price: " + Number(course.price).toFixed(2) + " " + (course.currency || "USD");
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "secondary small-button";
+    button.textContent = "Open Course";
     button.addEventListener("click", () => openAcademyCourse(course));
-    detail.append(p, button);
+    card.append(title, description, price, button);
+    detail.appendChild(card);
   }
 }
 
