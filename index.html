@@ -308,165 +308,117 @@ function openStudentPanel(panel) {
 async function loadAcademyCatalogue() {
   const catalogue = $("academy-catalogue");
   catalogue.replaceChildren();
-
   const heading = document.createElement("h2");
   heading.textContent = "Explore Our Subjects";
   catalogue.appendChild(heading);
-
   const intro = document.createElement("p");
   intro.className = "muted";
-  intro.textContent =
-    "Explore popular subjects, search the full catalogue, or show all subjects.";
+  intro.textContent = "Choose a curriculum to browse subjects across Zimbabwe, South Africa and international programmes.";
   catalogue.appendChild(intro);
 
-  const { data: categories, error } = await supabaseClient
-    .from("catalog_categories")
-    .select("id, slug, name, sort_order")
-    .order("sort_order");
-
-  if (error) {
+  const [{ data: categories, error: categoryError }, { data: curricula, error: curriculumError }] = await Promise.all([
+    supabaseClient.from("catalog_categories").select("id, slug, name, sort_order").order("sort_order"),
+    supabaseClient.from("curricula").select("id, slug, name").order("id")
+  ]);
+  if (categoryError || curriculumError) {
     const message = document.createElement("p");
     message.className = "notice";
-    message.textContent = "Could not load categories: " + error.message;
+    message.textContent = "Could not load the subject catalogue: " + (categoryError || curriculumError).message;
     catalogue.appendChild(message);
     return;
   }
-
-  if (!categories || categories.length === 0) {
-    catalogue.append("No categories are available yet.");
+  if (!categories?.length || !curricula?.length) {
+    catalogue.append("The catalogue is being prepared. Please check back soon.");
     return;
   }
 
   for (const category of categories) {
     const section = document.createElement("section");
     section.className = "category";
-
     const title = document.createElement("h3");
     title.textContent = category.name;
     section.appendChild(title);
 
-    const { data: subjects, error: subjectError } =
-  await supabaseClient
-    .from("catalog_subjects")
-    .select("id, name, description, sort_order")
-    .eq("category_id", category.id)
-    .eq("curriculum_id", 3)
-    .order("sort_order");
-
-    if (subjectError) {
-      const message = document.createElement("p");
-      message.textContent =
-  "Could not load subjects: " +
-  subjectError.message +
-  " (Code: " + (subjectError.code || "unknown") + ")";
-      section.appendChild(message);
-      catalogue.appendChild(section);
-      continue;
+    const controls = document.createElement("div");
+    controls.style.cssText = "display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin:10px 0";
+    const curriculumSelect = document.createElement("select");
+    curriculumSelect.setAttribute("aria-label", "Choose curriculum for " + category.name);
+    curriculumSelect.style.cssText = "width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:8px;background:white";
+    for (const curriculum of curricula) {
+      const option = document.createElement("option");
+      option.value = String(curriculum.id);
+      option.textContent = curriculum.name;
+      curriculumSelect.appendChild(option);
     }
+    const searchInput = document.createElement("input");
+    searchInput.type = "search";
+    searchInput.placeholder = "Search " + category.name + " subjects";
+    searchInput.setAttribute("aria-label", "Search " + category.name + " subjects");
+    searchInput.style.cssText = "width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:8px";
+    controls.append(curriculumSelect, searchInput);
+    section.appendChild(controls);
 
-    if (!subjects || subjects.length === 0) {
-      const message = document.createElement("p");
-      message.textContent = "Subjects are being prepared.";
-      section.appendChild(message);
-      catalogue.appendChild(section);
-      continue;
-    }
-
-    const isPrimary =
-      (category.slug || "").toLowerCase().includes("primary") ||
-      (category.name || "").toLowerCase().includes("primary");
-
-    let searchInput = null;
-    let showAllButton = null;
-    let list = document.createElement("ul");
+    const status = document.createElement("p");
+    status.className = "muted";
+    status.textContent = "Loading subjects…";
+    section.appendChild(status);
+    const list = document.createElement("ul");
     list.className = "subject-list";
     section.appendChild(list);
+    catalogue.appendChild(section);
 
-    let showAll = false;
-
+    let subjects = [];
     function renderSubjects() {
       list.replaceChildren();
-
-      const term = searchInput
-        ? searchInput.value.trim().toLowerCase()
-        : "";
-
+      const term = searchInput.value.trim().toLowerCase();
       const filtered = subjects.filter(subject =>
-        !term ||
-        (subject.name || "").toLowerCase().includes(term) ||
+        !term || (subject.name || "").toLowerCase().includes(term) ||
         (subject.description || "").toLowerCase().includes(term)
       );
-
-      const visible = isPrimary && !showAll && !term
-        ? filtered.slice(0, 5)
-        : filtered;
-
-      if (visible.length === 0) {
-        const item = document.createElement("li");
-        item.textContent = "No matching subjects found.";
-        list.appendChild(item);
+      if (!filtered.length) {
+        const empty = document.createElement("li");
+        empty.className = "subject-item";
+        empty.textContent = term ? "No subjects match that search." : "No subjects have been added for this curriculum yet.";
+        list.appendChild(empty);
+        return;
       }
-
-      for (const subject of visible) {
+      for (const subject of filtered) {
         const item = document.createElement("li");
         item.className = "subject-item";
-
         const name = document.createElement("strong");
         name.textContent = subject.name;
-
         const description = document.createElement("p");
-        description.textContent =
-          subject.description || "Explore this subject.";
-
+        description.textContent = subject.description || "Explore learning options for this subject.";
         const button = document.createElement("button");
         button.type = "button";
         button.className = "secondary small-button";
         button.textContent = "Find Course";
-        button.addEventListener("click", () =>
-          findSubjectCourse(subject)
-        );
-
+        button.addEventListener("click", () => findSubjectCourse(subject));
         item.append(name, description, button);
         list.appendChild(item);
       }
+    }
 
-      if (showAllButton) {
-        showAllButton.textContent = showAll
-          ? "Show fewer subjects"
-          : "Show all subjects (" + subjects.length + ")";
-        showAllButton.hidden = Boolean(term);
+    async function fetchSubjects() {
+      status.textContent = "Loading subjects…";
+      list.replaceChildren();
+      const { data, error } = await supabaseClient
+        .from("catalog_subjects")
+        .select("id, name, description, sort_order, category_id, curriculum_id")
+        .eq("category_id", category.id)
+        .eq("curriculum_id", Number(curriculumSelect.value))
+        .order("sort_order");
+      if (error) {
+        status.textContent = "Could not load subjects: " + error.message;
+        return;
       }
+      subjects = data || [];
+      status.textContent = subjects.length + " subject" + (subjects.length === 1 ? "" : "s");
+      renderSubjects();
     }
-
-    if (isPrimary) {
-      searchInput = document.createElement("input");
-      searchInput.type = "search";
-      searchInput.placeholder = "Search all Primary Education subjects";
-      searchInput.setAttribute(
-        "aria-label",
-        "Search all Primary Education subjects"
-      );
-      searchInput.style.width = "100%";
-      searchInput.style.boxSizing = "border-box";
-      searchInput.style.margin = "8px 0";
-
-      searchInput.addEventListener("input", renderSubjects);
-      section.insertBefore(searchInput, list);
-
-      showAllButton = document.createElement("button");
-      showAllButton.type = "button";
-      showAllButton.className = "secondary small-button";
-      showAllButton.style.margin = "8px 0";
-      showAllButton.addEventListener("click", () => {
-        showAll = !showAll;
-        renderSubjects();
-      });
-
-      section.insertBefore(showAllButton, list);
-    }
-
-    renderSubjects();
-    catalogue.appendChild(section);
+    curriculumSelect.addEventListener("change", fetchSubjects);
+    searchInput.addEventListener("input", renderSubjects);
+    await fetchSubjects();
   }
 }
 async function loadStudentCourses() {
