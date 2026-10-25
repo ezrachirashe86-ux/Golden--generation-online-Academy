@@ -185,6 +185,13 @@ language plpgsql security definer set search_path='' as $$
 begin
  if not private.is_admin() then raise exception 'Approved administrator access required.'; end if;
  if p_decision not in ('verified','rejected') then raise exception 'Invalid payment decision.'; end if;
+ if p_decision='verified' and not exists (
+   select 1 from public.payments p
+   join storage.objects o on o.bucket_id='payment-proofs' and o.name=p.proof_storage_path
+   where p.id=p_payment_id and p.proof_storage_path is not null
+ ) then
+   raise exception 'A stored payment proof is required before verification.';
+ end if;
  update public.payments set status=p_decision,admin_note=left(coalesce(p_notes,''),2000),reviewed_by=auth.uid(),reviewed_at=now(),updated_at=now()
  where id=p_payment_id and status in ('submitted','under_review');
  if not found then raise exception 'Payment record not found or is not reviewable.'; end if;
