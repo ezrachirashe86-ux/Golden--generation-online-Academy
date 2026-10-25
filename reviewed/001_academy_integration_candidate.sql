@@ -27,7 +27,7 @@ grant select on public.academy_payment_settings to authenticated;
 -- silently keep an older or weaker expression.
 drop policy if exists "Authenticated read enabled payment settings" on public.academy_payment_settings;
 drop policy if exists "Admins manage academy payment settings" on public.academy_payment_settings;
-do $ begin
+do $$ begin
   if not exists(select 1 from pg_policies where schemaname='public' and tablename='academy_payment_settings' and policyname='Authenticated read enabled payment settings') then
     create policy "Authenticated read enabled payment settings" on public.academy_payment_settings for select to authenticated using(enabled=true);
   end if;
@@ -48,7 +48,7 @@ alter table public.academy_admin_audit enable row level security;
 revoke all on public.academy_admin_audit from anon, authenticated;
 grant select on public.academy_admin_audit to authenticated;
 drop policy if exists "Admins read academy audit" on public.academy_admin_audit;
-do $ begin
+do $$ begin
  if not exists(select 1 from pg_policies where schemaname='public' and tablename='academy_admin_audit' and policyname='Admins read academy audit') then
   create policy "Admins read academy audit" on public.academy_admin_audit for select to authenticated using(private.is_admin());
  end if;
@@ -235,7 +235,7 @@ on conflict(id) do update set public=false,file_size_limit=5242880,allowed_mime_
 -- Replace named policies to guarantee the reviewed ownership restrictions are in force.
 drop policy if exists "Students upload own payment proofs" on storage.objects;
 drop policy if exists "Users read own payment proofs and admins read all" on storage.objects;
-do $ begin
+do $$ begin
  if not exists(select 1 from pg_policies where schemaname='storage' and tablename='objects' and policyname='Students upload own payment proofs') then
   create policy "Students upload own payment proofs" on storage.objects for insert to authenticated with check(bucket_id='payment-proofs' and (storage.foldername(name))[1]=auth.uid()::text);
  end if;
