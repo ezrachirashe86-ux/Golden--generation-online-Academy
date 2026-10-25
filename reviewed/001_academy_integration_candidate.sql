@@ -23,7 +23,11 @@ create table if not exists public.academy_payment_settings (
 alter table public.academy_payment_settings enable row level security;
 revoke all on public.academy_payment_settings from anon, authenticated;
 grant select on public.academy_payment_settings to authenticated;
-do $$ begin
+-- Recreate these named policies so a pre-existing policy with the same name cannot
+-- silently keep an older or weaker expression.
+drop policy if exists "Authenticated read enabled payment settings" on public.academy_payment_settings;
+drop policy if exists "Admins manage academy payment settings" on public.academy_payment_settings;
+do $ begin
   if not exists(select 1 from pg_policies where schemaname='public' and tablename='academy_payment_settings' and policyname='Authenticated read enabled payment settings') then
     create policy "Authenticated read enabled payment settings" on public.academy_payment_settings for select to authenticated using(enabled=true);
   end if;
@@ -43,7 +47,8 @@ create table if not exists public.academy_admin_audit (
 alter table public.academy_admin_audit enable row level security;
 revoke all on public.academy_admin_audit from anon, authenticated;
 grant select on public.academy_admin_audit to authenticated;
-do $$ begin
+drop policy if exists "Admins read academy audit" on public.academy_admin_audit;
+do $ begin
  if not exists(select 1 from pg_policies where schemaname='public' and tablename='academy_admin_audit' and policyname='Admins read academy audit') then
   create policy "Admins read academy audit" on public.academy_admin_audit for select to authenticated using(private.is_admin());
  end if;
@@ -188,13 +193,13 @@ begin
  if p_decision='verified' and not exists (
    select 1 from public.payments p
    join storage.objects o on o.bucket_id='payment-proofs' and o.name=p.proof_storage_path
-   where p.id=p_payment_id and p.proof_storage_path is not null
+   where p.id=p_payment_id and p.payment_method='eft' and p.proof_storage_path is not null
      and (storage.foldername(o.name))[1]=p.student_id::text
  ) then
    raise exception 'A stored payment proof is required before verification.';
  end if;
  update public.payments set status=p_decision,admin_note=left(coalesce(p_notes,''),2000),reviewed_by=auth.uid(),reviewed_at=now(),updated_at=now()
- where id=p_payment_id and status in ('submitted','under_review');
+ where id=p_payment_id and payment_method='eft' and status in ('submitted','under_review');
  if not found then raise exception 'Payment record not found or is not reviewable.'; end if;
  insert into public.academy_admin_audit(admin_id,action,entity_type,entity_id,details) values(auth.uid(),'course_payment_'||p_decision,'payment',p_payment_id::text,jsonb_build_object('notes',left(coalesce(p_notes,''),2000)));
 end $$;
@@ -227,7 +232,10 @@ revoke all on function public.activate_enrolment_after_payment_verification() fr
 insert into storage.buckets(id,name,public,file_size_limit,allowed_mime_types)
 values('payment-proofs','payment-proofs',false,5242880,array['application/pdf','image/jpeg','image/png'])
 on conflict(id) do update set public=false,file_size_limit=5242880,allowed_mime_types=array['application/pdf','image/jpeg','image/png'];
-do $$ begin
+-- Replace named policies to guarantee the reviewed ownership restrictions are in force.
+drop policy if exists "Students upload own payment proofs" on storage.objects;
+drop policy if exists "Users read own payment proofs and admins read all" on storage.objects;
+do $ begin
  if not exists(select 1 from pg_policies where schemaname='storage' and tablename='objects' and policyname='Students upload own payment proofs') then
   create policy "Students upload own payment proofs" on storage.objects for insert to authenticated with check(bucket_id='payment-proofs' and (storage.foldername(name))[1]=auth.uid()::text);
  end if;
