@@ -181,7 +181,7 @@ begin
  if not exists(select 1 from public.profiles where id=auth.uid() and role='admin') then raise exception 'Administrator access required.'; end if;
  if p_decision not in ('verified','rejected') then raise exception 'Invalid payment decision.'; end if;
  update public.payments set status=p_decision,admin_note=left(coalesce(p_notes,''),2000),reviewed_by=auth.uid(),reviewed_at=now(),updated_at=now()
- where id=p_payment_id and status in ('submitted','under_review','pending','rejected');
+ where id=p_payment_id and status in ('submitted','under_review');
  if not found then raise exception 'Payment record not found or is not reviewable.'; end if;
  insert into public.academy_admin_audit(admin_id,action,entity_type,entity_id,details) values(auth.uid(),'course_payment_'||p_decision,'payment',p_payment_id::text,jsonb_build_object('notes',left(coalesce(p_notes,''),2000)));
 end $$;
